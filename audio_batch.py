@@ -22,7 +22,9 @@ def batch_audio(audio, seconds, offset=None):
     sample_length = int(44100 * seconds)
 
     if offset is None:
-        offset = seconds
+        # give it some arbitrary separation
+        # an offset of 0.1 with 1 second means each value is used in 10 batches
+        offset = min(seconds, 0.1)
         print('hello world')
     sample_offset = int(44100 * offset)
 
