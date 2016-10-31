@@ -16,8 +16,8 @@ def min_batch(batch_size, n):
     return k
 
 
-def weight_variable(shape):
-    initial = tf.truncated_normal(shape, stddev=0.1)
+def weight_variable(shape, std=0.1):
+    initial = tf.truncated_normal(shape, stddev=std)
     return tf.Variable(initial)
 
 

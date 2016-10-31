@@ -1,37 +1,47 @@
 import tensorflow as tf
+import numpy as np
 
 from util import weight_variable
 
 
-def reg_nn(height_in, height_out, node_count):
+def gen_layer(input_x, feature_count, node_count, std):
+    w = weight_variable([feature_count,node_count], std=std)
+    b = weight_variable([1,node_count], std=std)
+    return [tf.matmul(input_x,w) + b, tf.nn.l2_loss(w) + tf.nn.l2_loss(b)]
+
+def gen_relu_layer(input_x, feature_count, node_count, std):
+    k = gen_layer(input_x, feature_count, node_count, std)
+    return [tf.nn.relu(k[0]), k[1]]
+
+def reg_nn(height_in, height_out, hidden_layer_count, node_count, std=0.1, alpha=0.00001):
     """Assumes its fully connected
     Stands for `regression` not `regular`, lol"""
 
     x = tf.placeholder(tf.float32, shape=[None, height_in])
     y = tf.placeholder(tf.float32, shape=[None, height_out])
 
-    w1 = weight_variable([height_in, node_count])
-    b1 = weight_variable([1, node_count])
+    layers = []
+    layers.append(gen_relu_layer(x, height_in, node_count, std))
 
-    w2 = weight_variable([node_count,node_count])
-    b2 = weight_variable([1, node_count])
+    for _ in range(hidden_layer_count - 1):
+        layers.append(gen_relu_layer(layers[-1][0], int(layers[-1][0].get_shape()[1]), node_count, std))
 
-    w3 = weight_variable([node_count,height_out])
-    b3 = weight_variable([1, height_out])
+    layers.append(gen_layer(layers[-1][0], int(layers[-1][0].get_shape()[1]), height_out, std))
 
-    layer1 = tf.add(tf.matmul(x, w1), b1)
-    layer1 = tf.nn.relu(layer1)
+    layers = np.asarray(layers)
 
-    layer2 = tf.add(tf.matmul(layer1, w2), b2)
-    layer2 = tf.nn.relu(layer2)
+    CE = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(layers[-1][0], y))
+    L2 = alpha * (layers[:,1].sum())
 
-    layer3 = tf.add(tf.matmul(layer2, w3), b3)
+    optimizer = tf.train.AdamOptimizer().minimize(CE + L2)
 
-    ce = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(layer3, y))
-    optimizer = tf.train.AdamOptimizer().minimize(ce)
-    y_pred = tf.nn.softmax(layer3)
+    P = tf.nn.softmax(layers[-1][0])
 
+    # initialization of variables
+    init = tf.initialize_all_variables()
+
+    # initialize a computation session
     sess = tf.Session()
-    sess.run(tf.initialize_all_variables())
+    sess.run(init)
 
-    return sess, x, y, ce, optimizer, y_pred
+    return sess, optimizer, x, y, P, CE
