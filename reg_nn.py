@@ -36,7 +36,7 @@ def reg_nn(height_in, height_out, hidden_layer_count, node_count, std=0.1, alpha
 
     optimizer = tf.train.AdamOptimizer().minimize(MSE + L2)
 
-    P = tf.nn.softmax(layers[-1][0])
+    P = layers[-1][0]
 
     # initialization of variables
     init = tf.initialize_all_variables()
