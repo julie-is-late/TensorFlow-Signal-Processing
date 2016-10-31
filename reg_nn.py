@@ -30,10 +30,11 @@ def reg_nn(height_in, height_out, hidden_layer_count, node_count, std=0.1, alpha
 
     layers = np.asarray(layers)
 
-    CE = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(layers[-1][0], y))
+    MSE = tf.reduce_mean(tf.square(layers[-1][0] - y))
+    # CE = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(layers[-1][0], y))
     L2 = alpha * (layers[:,1].sum())
 
-    optimizer = tf.train.AdamOptimizer().minimize(CE + L2)
+    optimizer = tf.train.AdamOptimizer().minimize(MSE + L2)
 
     P = tf.nn.softmax(layers[-1][0])
 
@@ -44,4 +45,4 @@ def reg_nn(height_in, height_out, hidden_layer_count, node_count, std=0.1, alpha
     sess = tf.Session()
     sess.run(init)
 
-    return sess, optimizer, x, y, P, CE
+    return sess, optimizer, x, y, P, MSE
