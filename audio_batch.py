@@ -1,12 +1,13 @@
 import numpy as np
 
+from util import min_batch
 
 def make_batch(audio_in, audio_out, n, batch_length, sample_offset):
     """This is a tad more complicated than normal b/c batches can overlap"""
-    if n * sample_offset > audio_in.shape[1] - batch_length:
-        raise ValueError('too many batches %f %f' % (n * sample_offset, audio_in.shape[1] - batch_length))
+    if n * sample_offset > audio_in.shape[0] - batch_length:
+        raise ValueError('too many batches %f %f' % (n * sample_offset, audio_in.shape[0] - batch_length))
 
-    if audio_out.shape[1] != audio_in.shape[1]:
+    if audio_out.shape[0] != audio_in.shape[0]:
         raise ValueError('audio in and audio out are not the same length')
 
     # perm = np.arange(n)
@@ -15,8 +16,8 @@ def make_batch(audio_in, audio_out, n, batch_length, sample_offset):
 
     offset = 0
     for i in range(n):
-        input_set[i]  = audio_in[:, offset:offset + batch_length]
-        output_set[i] = audio_out[:, offset:offset + batch_length]
+        input_set[i]  = audio_in[offset:offset + batch_length]
+        output_set[i] = audio_out[offset:offset + batch_length]
         offset += sample_offset
 
     return input_set, output_set
@@ -40,7 +41,7 @@ def batch_audio(audio_in, audio_out, seconds, offset=None):
 
 
     ### calculate number of slices
-    n = int((audio_in.shape[1] - sample_length) / sample_offset)
+    n = int((audio_in.shape[0] - sample_length) / sample_offset)
 
     return make_batch(audio_in, audio_out, n, sample_length, sample_offset)
 
@@ -68,27 +69,25 @@ def get_valid(audio_in, audio_out, seconds, valid_percent):
     #             output_set = np.append(output_set[:start], output_set[i:])
 
     ### split off testing set
-    num_descrete = int((input_set.shape[1] - sample_length) / sample_length)
+    num_descrete = int((input_set.shape[0] - sample_length) / sample_length)
     if valid_percent >= 1:
         raise ValueError('Invalid sample validation percentage')
     num_valid = num_descrete * valid_percent
     if num_valid <= 0:
         raise ValueError('Invalid sample validation percentage for given audio sample')
 
-    validation_pos = int((input_set.shape[1] - sample_length * num_valid) / sample_length)
+    validation_pos = int((input_set.shape[0] - sample_length * num_valid) / sample_length)
     ix = np.random.permutation(validation_pos)
 
     valid_set = np.asarray(
-        [ input_set[:, int(ix[0] * sample_length) : int(ix[0] * sample_length + num_valid * sample_length)],
-          output_set[:, int(ix[0] * sample_length) : int(ix[0] * sample_length + num_valid * sample_length)] ])
+        [ input_set[int(ix[0] * sample_length) : int(ix[0] * sample_length + num_valid * sample_length)],
+          output_set[int(ix[0] * sample_length) : int(ix[0] * sample_length + num_valid * sample_length)] ])
     input_set = np.concatenate(
-        [ input_set[:, :int(ix[0] * sample_length)],
-          input_set[:, int(ix[0] * sample_length + num_valid * sample_length):] ],
-        axis=1)
+        [ input_set[:int(ix[0] * sample_length)],
+          input_set[int(ix[0] * sample_length + num_valid * sample_length):] ])
     output_set = np.concatenate(
-        [ output_set[:, :int(ix[0] * sample_length)],
-          output_set[:, int(ix[0] * sample_length + num_valid * sample_length):] ],
-        axis=1)
+        [ output_set[:int(ix[0] * sample_length)],
+          output_set[int(ix[0] * sample_length + num_valid * sample_length):] ])
 
     return input_set, output_set, valid_set[0], valid_set[1]
 
