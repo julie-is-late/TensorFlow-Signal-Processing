@@ -11,8 +11,8 @@ def make_batch(audio_in, audio_out, n, batch_length, sample_offset):
         raise ValueError('audio in and audio out are not the same length')
 
     # perm = np.arange(n)
-    input_set = np.zeros([n, 2, batch_length])
-    output_set = np.zeros([n, 2, batch_length])
+    input_set = np.zeros([n, batch_length])
+    output_set = np.zeros([n, batch_length])
 
     offset = 0
     for i in range(n):
