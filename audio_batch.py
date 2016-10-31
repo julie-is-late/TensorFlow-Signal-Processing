@@ -21,7 +21,8 @@ def make_batch(audio_in, audio_out, n, batch_length, sample_offset):
 
     return input_set, output_set
 
-def batch_audio(audio_in, audio_out, seconds, valid_percent, offset=None):
+
+def batch_audio(audio_in, audio_out, seconds, offset=None):
     """Automatically batch the audio into sections of length `seconds`
 
     returns batch set and validation set"""
@@ -38,9 +39,20 @@ def batch_audio(audio_in, audio_out, seconds, valid_percent, offset=None):
     sample_offset = int(44100 * offset)
 
 
+    ### calculate number of slices
+    n = int((audio_in.shape[1] - sample_length) / sample_offset)
+
+    return make_batch(audio_in, audio_out, n, sample_length, sample_offset)
+
+
+
+def get_valid(audio_in, audio_out, seconds, valid_percent):
+    """Extracts a validation set from the audio data"""
+    # assume 44.1khz wav file
+    sample_length = int(44100 * seconds)
+
     input_set = np.copy(audio_in)
     output_set = np.copy(audio_out)
-
 
     # ### Cut out long periods of blank
     # FIXME: this has bugs b/c `input_set[:start]` doesn't fix the offset of what's removed
@@ -78,9 +90,5 @@ def batch_audio(audio_in, audio_out, seconds, valid_percent, offset=None):
           output_set[:, int(ix[0] * sample_length + num_valid * sample_length):] ],
         axis=1)
 
-    ### calculate number of slices
-    n = int((input_set.shape[1] - sample_length) / sample_offset)
+    return input_set, output_set, valid_set[0], valid_set[1]
 
-    train_in, train_out = make_batch(input_set, output_set, n, sample_length, sample_offset)
-
-    return train_in, train_out, valid_set[0], valid_set[1]
