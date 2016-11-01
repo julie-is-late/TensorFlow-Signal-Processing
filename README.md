@@ -1,4 +1,4 @@
-# DeepSP
+# TensorFlow Signal Processing
 doing audio digital signal processing in tensorflow
 
 
