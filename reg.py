@@ -5,7 +5,7 @@ import numpy as np
 from audio_batch import batch_audio, get_valid
 from reg_nn import reg_nn
 
-def run_reg(epochs):
+def run_reg(epochs, layer_count, node_count):
     sin_pre = np.load('./data/lowpass/pre/sin.npz')['data']
     sqr_pre = np.load('./data/lowpass/pre/square.npz')['data']
     saw_pre = np.load('./data/lowpass/pre/plysaw.npz')['data']
@@ -34,7 +34,7 @@ def run_reg(epochs):
 
 
     # In[ ]:
-    sess, optimizer, x, y, P, MSE = reg_nn(input_set.shape[1], output_set.shape[1], 3, 1024)
+    sess, optimizer, x, y, P, MSE = reg_nn(input_set.shape[1], output_set.shape[1], layer_count, node_count)
 
     # epochs = 500
     t_start = time.time()
