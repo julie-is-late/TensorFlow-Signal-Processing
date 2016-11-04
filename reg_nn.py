@@ -7,7 +7,7 @@ from util import weight_variable
 def gen_layer(input_x, feature_count, node_count, std):
     w = weight_variable([feature_count,node_count], std=std)
     b = weight_variable([1,node_count], std=std)
-    return [tf.matmul(input_x,w) + b, tf.nn.l2_loss(w) + tf.nn.l2_loss(b)]
+    return [tf.matmul(input_x,w) + b, tf.nn.l2_loss(w)]
 
 def gen_relu_layer(input_x, feature_count, node_count, std):
     k = gen_layer(input_x, feature_count, node_count, std)
