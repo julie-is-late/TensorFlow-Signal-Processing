@@ -3,7 +3,7 @@ import tensorflow as tf
 from lowpass import lowpass
 from runner import run
 
-def gen_lin(layer_width):
+def gen_nonlin(layer_width):
     std = 0.1
     alpha = 0.00001
 
@@ -48,7 +48,7 @@ def gen_lin(layer_width):
     return x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std
 
 
-def run_lin(hidden_width, epochs):
+def run_nonlin(hidden_width, epochs):
     # oh god what have I done
-    x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std = gen_lin(hidden_width)
+    x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std = gen_nonlin(hidden_width)
     run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'nonlinear', hidden_width, epochs)
