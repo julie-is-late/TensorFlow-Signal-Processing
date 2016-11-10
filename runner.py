@@ -3,14 +3,15 @@ import time, os, math
 import numpy as np
 import tensorflow as tf
 
-from lowpass import lowpass
 from util import header
 
-def run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, dataset, net_type, hidden_width, epochs):
+def run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, dataset, net_type, hidden_width, epochs, batch_size=500, extra=None):
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
 
     ckpt_dir = "./tmp/%s/%s/%d/" % (dataset, net_type, hidden_width)
+    if extra is not None:
+        ckpt_dir += '%d/' % (extra)
 
     if not os.path.exists(ckpt_dir):
         os.makedirs(ckpt_dir)
@@ -20,7 +21,6 @@ def run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, vali
             print('restoring network from:',ckpt.model_checkpoint_path)
             saver.restore(sess, ckpt.model_checkpoint_path)
 
-    batch_size = 500
     epoch = sess.run(global_step)
     t_start = time.time()
     total_compute_time = -1
