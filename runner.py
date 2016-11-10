@@ -5,7 +5,7 @@ import tensorflow as tf
 
 from util import header
 
-def run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, dataset, net_type, hidden_width, epochs, batch_size=500, extra=None):
+def run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, dataset, net_type, hidden_width, epochs, batch_size=500, extra=None, check_dist=None):
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
 
@@ -25,9 +25,8 @@ def run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, vali
     t_start = time.time()
     total_compute_time = -1
 
-    check_dist = epochs // 100
-    if check_dist <= 1:
-        check_dist = 2
+    if check_dist is None:
+        check_dist = epochs // 100
 
     print("starting from epoch:", epoch)
 
