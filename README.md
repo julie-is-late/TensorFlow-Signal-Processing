@@ -7,13 +7,13 @@
 The objective of this project is to evaluate the effectiveness of doing audio effect emulation using deep learning. For audio, there are two main classifications for tools: generators and effects. A generator is something which takes non-audio input, either physical or midi, and creates audio out of it. This would include instruments, synthesizers, drums - basically anything that really stands out as being traditionally musical. The other category, effects, are elements which take audio as input and transform it into some other audio to output. This can range from a simple filter to more complex effects such as distortion or reverb; even the echo of a room or quality drop over a phone call is an effect. The idea behind this project is to see if we can’t train a network to emulate one of these effects using deep learning.  
 Audio is an interesting medium to work in for machine learning, as like image data the output can be judged both quantitatively and qualitatively. On top of this, audio itself is a complex structure: the additive property of waves can cause some unforeseen outcomes. On top of that, digital audio data is inherently convoluted: it is stored as a time series of points which are sampled from the audio signal itself. These points are fast fourier transformed back into the signal whenever the audio is ready to be output. Because of this, a lot of the information which is affected by effects is hidden behind this signal processing problem.  
 In the past, doing signal processing in machine learning involved doing some manual decomposition of the input in order to abstract away the signal processing [1]. Often audio would be rendered into images of the spectrogram, which show the frequency distribution of the audio. While this works well for classification problems, it lacks accuracy for end to end regression problems like ours. For that, we need to do actual signal processing in order to detect the features that matter.  
-  
+
 The current progress on this project is available at [github.com/jshap70/TensorFlow-Signal-Processing](http://github.com/jshap70/TensorFlow-Signal-Processing)
 
 
 ## sample types
 
-
+Previously I mentioned how audio is a conceptionally complex structure.   
 
 ![alt text][sample_rate] [2]
 
@@ -51,6 +51,8 @@ Before we begin batching, validation and testing data is extracted prior to the 
 [sample_rate]: https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/sample-rate.png "point sampling in digital audio"
 
 [2] image showing how digital audio data is stored. Source: [progulator.com/digital-audio/sampling-and-bit-depth/](http://progulator.com/digital-audio/sampling-and-bit-depth/) however, note that there are some very large errors in this article. Most importantly, it incorrectly does not cover how fourier transforms are used to go from the digital point sampling back to the analog signal. 
+
+[3] Source: https://processing.org/tutorials/sound/
 
 [misc]  
 some audio midi from - http://www.piano-midi.de/brahms.htm  
