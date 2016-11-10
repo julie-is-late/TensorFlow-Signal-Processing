@@ -49,8 +49,8 @@ def run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, vali
             saver.save(sess, ckpt_dir + 'model.ckpt')
             (mse_train, p_train) = sess.run([MSE, P],feed_dict={x:input_set,y:output_set})
             (mse_valid, p_valid) = sess.run([MSE, P],feed_dict={x:valid_in_batches,y:valid_out_batches})
-            train_std = (output_set - p_train).std()
-            valid_std = (valid_out_batches - p_valid).std()
+            train_std = (np.squeeze(output_set) - p_train).std()
+            valid_std = (np.squeeze(valid_out_batches) - p_valid).std()
 
             total_compute_time = (time.time() - t_start)/60
             print()
@@ -60,8 +60,8 @@ def run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, vali
     # compute final results (and ensure computed if we're already done)
     (mse_train, p_train) = sess.run([MSE, P],feed_dict={x:input_set,y:output_set})
     (mse_valid, p_valid) = sess.run([MSE, P],feed_dict={x:valid_in_batches,y:valid_out_batches})
-    train_std = (output_set - p_train).std()
-    valid_std = (valid_out_batches - p_valid).std()
+    train_std = (np.squeeze(output_set) - p_train).std()
+    valid_std = (np.squeeze(valid_out_batches) - p_valid).std()
 
     print()
     header()
