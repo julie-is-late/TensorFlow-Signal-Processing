@@ -73,7 +73,7 @@ def gen_conv(layer_width, filter_size):
     return x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std
 
 
-def run_conv(hidden_width, filter_size, epochs, save_dist=None):
+def run_conv(hidden_width, filter_size, epochs, batch_size=50, save_dist=None):
     # oh god what have I done
     x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std = gen_conv(hidden_width, filter_size)
-    run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'convolution', hidden_width, epochs, extra=filter_size, check_dist=save_dist)
+    run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'convolution', hidden_width, epochs, batch_size=batch_size, extra=filter_size, check_dist=save_dist)
