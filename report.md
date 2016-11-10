@@ -1,4 +1,4 @@
-# Deep Signal Processing
+# TensorFlow-Signal-Processing
 
 ##### Joel Shapiro
 
@@ -9,7 +9,7 @@ The objective of this project is to evaluate the effectiveness of doing audio ef
 Audio is an interesting medium to work in for machine learning, as like image data the output can be judged both quantitatively and qualitatively. On top of this, audio itself is a complex structure: the additive property of waves can cause some unforeseen outcomes. On top of that, digital audio data is inherently convoluted: it is stored as a time series of points which are sampled from the audio signal itself. These points are fast fourier transformed back into the signal whenever the audio is ready to be output. Because of this, a lot of the information which is affected by effects is hidden behind this signal processing problem.  
 In the past, doing signal processing in machine learning involved doing some manual decomposition of the input in order to abstract away the signal processing [1]. Often audio would be rendered into images of the spectrogram, which show the frequency distribution of the audio. While this works well for classification problems, it lacks accuracy for end to end regression problems like ours. For that, we need to do actual signal processing in order to detect the features that matter.  
   
-The current progress on this project is available at [github.com/jshap70/DeepSP](http://github.com/jshap70/DeepSP)
+The current progress on this project is available at [github.com/jshap70/TensorFlow-Signal-Processing](http://github.com/jshap70/TensorFlow-Signal-Processing)
 
 
 ## sample types
