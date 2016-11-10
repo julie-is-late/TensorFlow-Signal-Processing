@@ -25,7 +25,9 @@ def run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, vali
     t_start = time.time()
     total_compute_time = -1
 
-    check_dist = int((epochs / 100))
+    check_dist = epochs // 100
+    if check_dist <= 1:
+        check_dist = 2
 
     print("starting from epoch:", epoch)
 
