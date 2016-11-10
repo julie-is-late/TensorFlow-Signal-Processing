@@ -18,14 +18,14 @@ def gen_conv(layer_width, filter_size):
 
     ### GEN LAYERS
     x = tf.placeholder(tf.float32, shape=[None, input_set.shape[1], 1], name='x')
-    x = tf.expand_dims(x, 1)
+    x_4 = tf.expand_dims(x, 1)
     y = tf.placeholder(tf.float32, shape=[None, output_set.shape[1], 1], name='y')
-    y = tf.expand_dims(y, 1)
+    y_4 = tf.expand_dims(y, 1)
 
     w0 = tf.Variable(tf.truncated_normal([1, filter_size, 1, layer_width], stddev=std), name='w0')
     b0 = tf.Variable(tf.truncated_normal([layer_width], stddev=std), name='b0')
     conv_0 = tf.nn.conv2d(
-        x,
+        x_4,
         w0,
         strides=[1,1,1,1],
         padding='SAME')
@@ -38,7 +38,7 @@ def gen_conv(layer_width, filter_size):
     lay1 = tf.nn.relu(lay1)
 
     # required b/c conv2d_transpose does not infer None sized object's sizes at runtime, but we can cheat like this
-    dyn_input_shape = tf.shape(x)
+    dyn_input_shape = tf.shape(x_4)
     batch_size = dyn_input_shape[0]
 
     w2 = tf.Variable(tf.truncated_normal([1, filter_size, 1, layer_width], stddev=std), name='w2')
@@ -54,7 +54,7 @@ def gen_conv(layer_width, filter_size):
 
     P = tf.squeeze(lay2) # drop size 1 dim (channels)
 
-    MSE = tf.reduce_mean(tf.square(lay2 - y))
+    MSE = tf.reduce_mean(tf.square(lay2 - y_4))
     L2 = alpha * (tf.nn.l2_loss(w0) + tf.nn.l2_loss(w1) + tf.nn.l2_loss(w2))
 
     optimizer = tf.train.AdamOptimizer().minimize(MSE + L2)
