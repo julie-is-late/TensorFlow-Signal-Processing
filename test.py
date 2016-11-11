@@ -18,7 +18,11 @@ def get_test():
 def run_test(x, y, P, MSE, sess, run_name=None):
     test_input_batched, test_output_batched = get_test()
 
-    (test_p, mse) = sess.run([P, MSE],feed_dict={x:test_input_batched.reshape(-1, test_input_batched.shape[1], 1), y:test_output_batched.reshape(-1, test_output_batched.shape[1], 1)})
+    if len(x.get_shape()) == 3:
+        (test_p, mse) = sess.run([P, MSE],feed_dict={x:test_input_batched.reshape(-1, test_input_batched.shape[1], 1), y:test_output_batched.reshape(-1, test_output_batched.shape[1], 1)})
+    else:
+        (test_p, mse) = sess.run([P, MSE],feed_dict={x:test_input_batched, y:test_output_batched})
+
     p = np.squeeze(test_p)
 
     std = (p - test_output_batched[:,:p.shape[1]]).std()
