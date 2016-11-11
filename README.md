@@ -23,7 +23,7 @@ However, this is an over simplification. In reality, the frequency chart is addi
 
 And in fact this is what most machine learning uses to train audio on, except instead of having a height in the amplitute dimention they use image chanels and color intensity to represent it. A real example can be seen below. 
 
-<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/spectrogram.jpg" height="250" alt="audio spectrogram">
+<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/spectrogram.jpg" height="250" alt="audio spectrogram"> [4]
 
 
 That is why the goal of this project is to ______
