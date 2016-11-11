@@ -28,4 +28,4 @@ def run_test(x, y, P, MSE, sess):
 
     p = p.reshape(p.shape[0] * p.shape[1])
 
-    write_output(p, 'beethoven_opus10_generated')
+    write_output(p, 'beethoven_opus10_generated.wav')
