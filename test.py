@@ -31,6 +31,6 @@ def run_test(x, y, P, MSE, sess, run_name=None):
     filename = 'beethoven_opus10_generated.wav'
 
     if run_name is not None:
-        filename = run_name + '/' + filename
+        filename = run_name + '_' + filename
 
     write_output(p, filename)
