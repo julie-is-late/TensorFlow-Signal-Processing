@@ -15,17 +15,20 @@ The current progress on this project is available at [github.com/jshap70/TensorF
 
 Previously I mentioned how audio is a conceptionally complex structure. This is because audio data is time series data of the amplitute of the audio, however almost all of the information that we think of as being "stored" in the sound is stored in the frequency space of the sound. The relationship between the two is extracted by using a Fourier transform. An example can be seen below, where the time series data on the left would produce the frequency chart on the right. 
 
-<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/microcontrollers_fft_example.png" width="550" alt="fourier transforms and signals"> [2]
+<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/microcontrollers_fft_example.png" height="250" alt="fourier transforms and signals"> [2]
 
 However, this is an over simplification. In reality, the frequency chart is adding an dimention to the data, so the frequency chart above is losing the time data of the sound. That frequency chart is only true for a small time cross section of the audio. A real frequency distribution of the sound would look as such.
  
-<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/frequency_time_data.png" width="550" alt="frequency of chello"> [3]
+<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/frequency_time_data.png" height="250" alt="frequency of chello"> [3]
 
-And in fact this is what most machine learning uses to train audio on, except instead of having a height in the amplitute dimention they use image chanels and color intensity to represent it.
+And in fact this is what most machine learning uses to train audio on, except instead of having a height in the amplitute dimention they use image chanels and color intensity to represent it. A real example can be seen below. 
+
+<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/spectrogram.jpg" height="250" alt="audio spectrogram">
+
 
 That is why the goal of this project is to ______
 
-<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/sample-rate.png" height="250" alt="point sampling in digital audio"> [4]
+<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/sample-rate.png" height="250" alt="point sampling in digital audio"> [5]
 
 The audio used in this project has a uniform sample rate, meaning that we're ensuring that we don't have to worry about TensorFlow actually understanding that the data inputs are time dependent.   
 The audio is mostly composed of some simple, generated audio samples which covers a varying types of sound. On the more simple side, we have simple sine, triangle, and saw waves that move through a frequency range. More difficult samples include piano recordings and voice data. The scope of this project was only on simple effects because of the time and resources available, however it would be interesting to see the impact filter complexity has on training difficulty.
@@ -62,7 +65,9 @@ Before we begin batching, validation and testing data is extracted prior to the 
 
 [3] This image is heavily modified from the source, but still it originally came from: https://processing.org/tutorials/sound/
 
-[4] image showing how digital audio data is stored. Source: [progulator.com/digital-audio/sampling-and-bit-depth/](http://progulator.com/digital-audio/sampling-and-bit-depth/) however, note that there are some very large errors in this article. Most importantly, it incorrectly does not cover how fourier transforms are used to go from the digital point sampling back to the analog signal. 
+[4] spectrogram image from: [dwutygodnik.com/artykul/673-uwaznosc-fraktale-spektra-modele.html](http://www.dwutygodnik.com/artykul/673-uwaznosc-fraktale-spektra-modele.html)
+
+[5] image showing how digital audio data is stored. Source: [progulator.com/digital-audio/sampling-and-bit-depth/](http://progulator.com/digital-audio/sampling-and-bit-depth/) however, note that there are some very large errors in this article. Most importantly, it incorrectly does not cover how fourier transforms are used to go from the digital point sampling back to the analog signal. 
 
 
 [misc]  
