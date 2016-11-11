@@ -20,10 +20,12 @@ def run_test(x, y, P, MSE, sess):
 
     (test_p, mse) = sess.run([P, MSE],feed_dict={x:test_input_batched.reshape(-1, test_input_batched.shape[1], 1), y:test_output_batched.reshape(-1, test_output_batched.shape[1], 1)})
     p = np.squeeze(test_p)
-    p = p.reshape(p.shape[0] * p.shape[1])
 
-    mse = (p - test_output_batched[p.shape[0]]).std()
+    std = (p - test_output_batched[:,:p.shape[0]]).std()
     print(' test mse:', mse)
     print('test rmse:', np.sqrt(mse))
+    print(' test std:', std)
+
+    p = p.reshape(p.shape[0] * p.shape[1])
 
     write_output(p, 'beethoven_opus10_generated')
