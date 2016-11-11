@@ -21,7 +21,7 @@ However, this is an over simplification. In reality, the frequency chart is addi
  
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/frequency_time_data.png" height="250" alt="frequency of chello"> [3]
 
-And in fact this is what most machine learning uses to train audio on, except instead of having a height in the amplitute dimention they use image chanels and color intensity to represent it. A real example can be seen below. 
+And in fact this is what most machine learning uses to train audio on, except instead of having a height in the amplitute dimention they use image chanels and color intensity to represent it. This type of representation is called a Spectrogram. Spectrograms actually store 3 dimentional data, with frequency shown in the vertical direction, amplitute shown as color intensity, and time shown along the horizontal axis. You can see an example below.
 
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/spectrogram.jpg" height="250" alt="audio spectrogram"> [4]
 
@@ -38,9 +38,15 @@ The audio used in this project has a uniform sample rate, which allows us to bat
 
 # the network
 
-Intuitively, it would make sense that a standard linear network would most likely not be able to properly model this problem. However, I still wanted to form a baseline 
+The plan to teach the network how to interpret the audio data needed to address 2 main concerns: first, it needed to be able to look at the audio and extract frequency data from it, and second it needed to be able to "undo" this operation so that the data could be converted back into audio.  
+As far as the first problem is concerned, it's possible for us to add time as a dimention to the audio data similar to the frequency spectrogram concept above. In that model, time is represented as part of the image by being one of it's axis. In this way, the 2 dimentional instantaneous frequency plot becomes a 3 dimentional image. For our data, we have a 1 dimention of data: amplitute. By adding time as a dimention to this data, by batching it in contiguous time cuncks, we can attempt to expose the network to patterns in the data. Or at least that's the idea.  
+The second major issue deals with making the system end-to-end. We are looking to be able to take the output of the network, write it to a file, and play it back without having to take any extra steps. For a linear or nonlinear system, this is about as difficult as it is accurate - which is to say not very. However, for a convolutional network which is introducing extra depth in the network, it's necessary to have a convolutional transpose layer. This type of layer is sometimes refered to as a 'deconvolutional' layer, however it's important to note that this is actually a misnomer, as deconvolution is a completely different process related to computer vision. Regardless of the terminology, a convolutional transpose layer allows you to take layers which have been convolved and attempt to separate out the data back into more meaningful data. In our case, hopefully back into the amplitute graph.  
 
- I used a standard, fully connected regression neural network with varying depths of hidden layers. The goal of this network was to try to overfit the training data to show that it can at least be brute forced.
+
+## layer design
+Intuitively, it would make sense that a standard linear network would most likely not be able to properly model this problem. However, I still wanted to form a baseline to see just 
+
+I used a standard, fully connected regression neural network with varying depths of hidden layers. The goal of this network was to try to overfit the training data to show that it can at least be brute forced.
 
 Because this problem is attempting to directly emulate a filtering effect, it seems somewhat intuitive that this problem would be decently well represented by a convolutional network. If we could get the neural net to understand the audio input, we could train a convolutional layer to understand the change in the data from the input to the output. This might also allow us to combine convolutional layers which are trained from different filters, but more on that later.
 
@@ -51,7 +57,7 @@ Looking at the data itself, the wav files are stereo 16bit PCM (integer)) files.
 
 Before we begin batching, validation and testing data is extracted prior to the batching to ensure that it is not trained on at all. Because it is time series data the batching is a bit trickier. Although the data needs to be kept in contiguous chunks, we can still extract smaller sections of it to train on so we don’t have to train on the whole dataset at one time. I implemented a batching system that does a scrolling window selection of the audio for discrete time periods. If the offset that each window is from each other is smaller than the length of each sample, then there will be some overlap of the batches. Initially, I have set up up the batches in a way that means every datapoint will be used 10 times. After generating the batches I shuffle them out of order so that we can get a more even distribution.
 
-
+*Side note: Ideally, we would want to take cuts of the data at small enough intervals to only allow for a handful of oscillations in the data. This might ensure that the net would get as close as possible of an idea of the instantaneous frequency data, but actually this wont work. The issue is that the length of an oscillation is directly a result of pitch, so as the pitch changes the window might cut off parts which are needed to extract the data.  
 
 
 ## future plans
