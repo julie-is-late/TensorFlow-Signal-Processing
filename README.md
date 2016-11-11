@@ -13,21 +13,21 @@ The current progress on this project is available at [github.com/jshap70/TensorF
 
 ## sample types and why we care
 
-Previously I mentioned how audio is a conceptionally complex structure. This is because audio data is time series data of the amplitute of the audio, however almost all of the information that we think of as being "stored" in the sound is stored in the frequency space of the sound. The relationship between the two is extracted by using a Fourier transform. An example can be seen below, where the time series data on the left would produce the frequency chart on the right. 
+Previously I mentioned how audio is a conceptually complex structure. This is because audio data is time series data of the amplitude of the audio, however almost all of the information that we think of as being "stored" in the sound is stored in the frequency space of the sound. The relationship between the two is extracted by using a Fourier transform. An example can be seen below, where the time series data on the left would produce the frequency chart on the right. 
 
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/microcontrollers_fft_example.png" height="250" alt="fourier transforms and signals"> [2]
 
-However, this is an over simplification. In reality, the frequency chart is adding an dimention to the data, so the frequency chart above is losing the time data of the sound. That frequency chart is only true for a small time cross section of the audio. A real frequency distribution of the sound would look as such.
+However, this is an oversimplification. In reality, the frequency chart is adding a dimension to the data, so the frequency chart above is losing the time data of the sound. That frequency chart is only true for a small time cross section of the audio. A real frequency distribution of the sound would look as such.
  
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/frequency_time_data.png" height="250" alt="frequency of chello"> [3]
 
-And in fact this is what most machine learning uses to train audio on, except instead of having a height in the amplitute dimention they use image chanels and color intensity to represent it. This type of representation is called a Spectrogram. Spectrograms actually store 3 dimentional data, with frequency shown in the vertical direction, amplitute shown as color intensity, and time shown along the horizontal axis. You can see an example below.
+And in fact this is what most machine learning uses to train audio on, except instead of having a height in the amplitude dimension they use image channels and color intensity to represent it. This type of representation is called a Spectrogram. Spectrograms actually store 3 dimensional data, with frequency shown in the vertical direction, amplitude shown as color intensity, and time shown along the horizontal axis. You can see an example below.
 
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/spectrogram.jpg" height="250" alt="audio spectrogram"> [4]
 
-That is why the goal of this project is to attempt to have the network learn the frequency-amplitute relationship on it's own, so that we can skip the step which manually extracts the important features.
+That is why the goal of this project is to attempt to have the network learn the frequency-amplitude relationship on it's own, so that we can skip the step which manually extracts the important features.
 
-Digital audio data is stored as sampled points from the amplitute vs time graph, which is to be exected given that it's the direct form -albeit with a Fourier transform- that the output needs to be. A basic example can be seen below.  
+Digital audio data is stored as sampled points from the amplitude vs time graph, which is to be expected given that it's the direct form -albeit with a Fourier transform- that the output needs to be. A basic example can be seen below.  
 
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/sample-rate.png" height="250" alt="point sampling in digital audio"> [5]
 
@@ -39,12 +39,12 @@ The audio used in this project has a uniform sample rate, which allows us to bat
 # the network
 
 The plan to teach the network how to interpret the audio data needed to address 2 main concerns: first, it needed to be able to look at the audio and extract frequency data from it, and second it needed to be able to "undo" this operation so that the data could be converted back into audio.  
-As far as the first problem is concerned, it's possible for us to add time as a dimention to the audio data similar to the frequency spectrogram concept above. In that model, time is represented as part of the image by being one of it's axis. In this way, the 2 dimentional instantaneous frequency plot becomes a 3 dimentional image. For our data, we have a 1 dimention of data: amplitute. By adding time as a dimention to this data, by batching it in contiguous time cuncks, we can attempt to expose the network to patterns in the data. Or at least that's the idea.  
-The second major issue deals with making the system end-to-end. We are looking to be able to take the output of the network, write it to a file, and play it back without having to take any extra steps. For a linear or nonlinear system, this is about as difficult as it is accurate - which is to say not very. However, for a convolutional network which is introducing extra depth in the network, it's necessary to have a convolutional transpose layer. This type of layer is sometimes refered to as a 'deconvolutional' layer, however it's important to note that this is actually a misnomer, as deconvolution is a completely different process related to computer vision. Regardless of the terminology, a convolutional transpose layer allows you to take layers which have been convolved and attempt to separate out the data back into more meaningful data. In our case, hopefully back into the amplitute graph.  
-
+As far as the first problem is concerned, it's possible for us to add time as a dimension to the audio data similar to the frequency spectrogram concept above. In that model, time is represented as part of the image by being one of it's axis. In this way, the 2 dimensional instantaneous frequency plot becomes a 3 dimensional image. For our data, we have a 1 dimension of data: amplitude. By adding time as a dimension to this data, by batching it in contiguous time chunks, we can attempt to expose the network to patterns in the data. Or at least that's the idea.  
+The second major issue deals with making the system end-to-end. We are looking to be able to take the output of the network, write it to a file, and play it back without having to take any extra steps. For a linear or nonlinear system, this is about as difficult as it is accurate - which is to say not very. However, for a convolutional network which is introducing extra depth in the network, it's necessary to have a convolutional transpose layer. This type of layer is sometimes referred to as a 'deconvolutional' layer, however it's important to note that this is actually a misnomer, as deconvolution is a completely different process related to computer vision. Regardless of the terminology, a convolutional transpose layer allows you to take layers which have been convolved and attempt to separate out the data back into more meaningful data - in our case, back into the amplitude graph.  
+With this in mind, we'll move on to the main design.
 
 ## layer design
-Intuitively, it would make sense that a standard linear network would most likely not be able to properly model this problem. However, I still wanted to form a baseline to see just 
+Intuitively, it would make sense that a standard linear network would most likely not be able to properly model this problem. The data is probably too complex for it to interpret it. However, I still wanted to form a baseline to see just what kind of benefit we would achieve by moving to a more advanced network. 
 
 I used a standard, fully connected regression neural network with varying depths of hidden layers. The goal of this network was to try to overfit the training data to show that it can at least be brute forced.
 
