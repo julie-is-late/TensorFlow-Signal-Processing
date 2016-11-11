@@ -13,14 +13,15 @@ The current progress on this project is available at [github.com/jshap70/TensorF
 
 ## sample types
 
-Previously I mentioned how audio is a conceptionally complex structure. 
+Previously I mentioned how audio is a conceptionally complex structure. This is because audio data is time series data of the amplitute of the audio, however all of the information that is "stored" in it is 
 
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/microcontrollers_fft_example.png" width="550" alt="fourier transforms and signals"> [2]
 
 
+Sound can also have harmonics 
 
-
-<img src="https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/resources/chello_frequency.svg" width="550" alt="frequency of chello"> [3]
+<!--<img src="https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/resources/chello_frequency.svg" width="550" alt="frequency of chello">-->
+<img src="./resources/chello_frequency.svg" width="550" alt="frequency of chello"> [3]
 
 
 
