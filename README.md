@@ -50,34 +50,43 @@ Moving past the basic networks, it seems somewhat intuitive that this problem wo
 
 // maybe we could do multiple filter sizes together? 
 
-## batching and data sampling
+## data sampling and batching
 
 Looking at the data itself, the wav files are stereo 16bit PCM (integer)) files. To begin with, I converted the data to a 32bit float wav file and normalized the audio to fit within that standard. I split apart each file into mono tracks because it allows for us to experiment with different network designs a lot faster. However, there are filters which have different effects across stereo channels, so we will lose the ability to train on those for now.  
-Before we begin batching, validation and testing data is extracted to ensure that it is not trained on. Because it is time series data, the batching process is a bit trickier. Although the data needs to be kept in contiguous chunks, we can still extract the smaller sections of it to train independently on to ensure the network is trained uniformly. To do this, I implemented a batching system that does a scrolling window selection of the audio for discrete time periods, and then I shuffle those batches for every epoch. If we set the offset of each window to the one next to it is smaller than the length of each window, then we can get some overlap in the windows to further increase the number of available batches.  
+The audio we are training on is a set of sine, square, and saw waves which travel through a range of requencies. Although these waves are very basic, the idea is that the simpler wave shapes might help to train the network to understand frequency analyis easier. The validation data is extracted from the same dataset as the training, but the testing data is entirely different. It uses the same filter, but it is a recording of a piano being played through it. The idea is that this is a much more complex wave shape, so it will be a better test of the network.  
+
+Because it is time series data, the batching process is a bit trickier. Although the data needs to be kept in contiguous chunks, we can still extract the smaller sections of it to train independently on to ensure the network is trained uniformly. To do this, I implemented a batching system that does a scrolling window selection of the audio for discrete time periods, and then I shuffle those batches for every epoch. If we set the offset of each window to the one next to it is smaller than the length of each window, then we can get some overlap in the windows to further increase the number of available batches.  
 
 *Side note: It might seem at first that we would want to take cuts of the data at small enough intervals to only allow for a handful of oscillations in the data. This might ensure that the net would get as close as possible of an idea of the instantaneous frequency data. But in reality this wont work. The issue is that the length of an oscillation is directly the result of pitch, so if the pitch changes the window might then cut off parts which are needed to extract the data. This is another reason why we must rely on the convolutional filters to slice the data for us.  
 
-# Results
+# results
+
+Before we look at the netwroks themselves, lets look at the expected input and output. 
+
 
 First up, the results of the linear network.  
 
-```
+```python
 x, y, P, MSE, sess = run_lin(1000, 4000)
 run_test(x, y, P, MSE, sess, run_name='best_linear')
 
-    starting from epoch: 4000
+  starting from epoch: 4000
 
-                                    mse                    rmse                                 std
-                    training  validation    training  validation    training  validation   reference
-    epoch: 4000      0.00342     0.00327     0.05847     0.05722     0.05885     0.05723     0.10412
+                  mse                    rmse                                 std
+ training  validation    training  validation    training  validation   reference
+  0.00342     0.00327     0.05847     0.05722     0.05885     0.05723     0.10412
 
-    test mse: 0.00118764
-    test rmse: 0.0344621
-    test std: 0.0344703680322
+  test mse: 0.00118764
+  test rmse: 0.0344621
+  test std: 0.0344703680322
 ```
 
 ... They're bad. Really, really bad.  
-Firstly, I found the network was only accurate with around 1000 nodes, which in and of itself poses a number of issues. Firstly, it took 4000 epochs to train the data, which even then was just barely able to overfit on the training data.
+
+Here's the 
+
+Firstly, I found the network was only accurate with around 1000 nodes, which in and of itself poses a number of issues. It took 4000 epochs to train the data, which even then was just barely able to overfit on the training data. An rmse value that is only half of the standard deviation of the input set is not terrible, but for training we really expect that to be lower. On top of that, it took almost 5 hours to train this network, and for that time I wasa hogging as much of the math department's server as I could.  
+Interestingly   
 
 There are a couple of possible reasons why the validation error could be equally as low as 
 
