@@ -15,7 +15,12 @@ The current progress on this project is available at [github.com/jshap70/TensorF
 
 Previously I mentioned how audio is a conceptionally complex structure.   
 
-![alt text][sample_rate] [2]
+![alt text][amplitude] [2]
+
+![alt text][frequency_space] [2]
+
+
+![alt text][sample_rate] [3]
 
 The audio used in this project has a uniform sample rate,  
 The audio is mostly composed of some simple, generated audio samples which covers a varying types of sound. On the more simple side, we have simple sine, triangle, and saw waves that move through a frequency range. More difficult samples include piano recordings and voice data. The scope of this project was only on simple effects because of the time and resources available, however it would be interesting to see the impact filter complexity has on training difficulty.
@@ -48,11 +53,17 @@ Before we begin batching, validation and testing data is extracted prior to the 
 
 [1] at least for most practical applications. An example can be seen here: [github.com/markostam/audio-deepdream-tf](https://github.com/markostam/audio-deepdream-tf)
 
+[2] images showing the relationship between amplitute and frequency. Source: https://processing.org/tutorials/sound/
+
+[amplitude]: https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/resources/chello_amplitute.svg "amplitude of chello"
+
+[frequency_space]: https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/resources/chello_frequency.svg "frequency of chello"
+
+
+[3] image showing how digital audio data is stored. Source: [progulator.com/digital-audio/sampling-and-bit-depth/](http://progulator.com/digital-audio/sampling-and-bit-depth/) however, note that there are some very large errors in this article. Most importantly, it incorrectly does not cover how fourier transforms are used to go from the digital point sampling back to the analog signal. 
+
 [sample_rate]: https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/sample-rate.png "point sampling in digital audio"
 
-[2] image showing how digital audio data is stored. Source: [progulator.com/digital-audio/sampling-and-bit-depth/](http://progulator.com/digital-audio/sampling-and-bit-depth/) however, note that there are some very large errors in this article. Most importantly, it incorrectly does not cover how fourier transforms are used to go from the digital point sampling back to the analog signal. 
-
-[3] Source: https://processing.org/tutorials/sound/
 
 [misc]  
 some audio midi from - http://www.piano-midi.de/brahms.htm  
