@@ -54,4 +54,4 @@ def run_nonlin(hidden_width, epochs):
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
     run(sess, x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'nonlinear', hidden_width, epochs)
-    return x, P, sess
+    return x, y, P, MSE, sess

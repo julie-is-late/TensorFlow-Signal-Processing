@@ -79,4 +79,4 @@ def run_conv(hidden_width, filter_size, epochs, batch_size=50, save_dist=None):
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
     run(sess, x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'convolution', hidden_width, epochs, batch_size=batch_size, extra=filter_size, check_dist=save_dist)
-    return x, P, sess
+    return x, y, P, MSE, sess
