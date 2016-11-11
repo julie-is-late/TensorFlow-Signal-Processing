@@ -18,12 +18,9 @@ Previously I mentioned how audio is a conceptionally complex structure. This is 
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/microcontrollers_fft_example.png" width="550" alt="fourier transforms and signals"> [2]
 
 
-Sound can also have harmonics 
+Idea is that the data would be 
 
-<!--<img src="https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/resources/chello_frequency.svg" width="550" alt="frequency of chello">-->
-<img src="./resources/chello_frequency.svg" width="550" alt="frequency of chello"> [3]
-
-
+<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/frequency_time_data.png" width="550" alt="frequency of chello"> [3]
 
 
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/sample-rate.png" height="250" alt="point sampling in digital audio"> [4]
@@ -61,7 +58,7 @@ Before we begin batching, validation and testing data is extracted prior to the 
 
 [2] Image showing the relationship between time series and frequency data. Source: [learn.adafruit.com/fft-fun-with-fourier-transforms/background](https://learn.adafruit.com/fft-fun-with-fourier-transforms/background)
 
-[3] images showing the relationship between amplitute and frequency. Source: https://processing.org/tutorials/sound/
+[3] This image is heavily modified from the source, but still it originally came from: https://processing.org/tutorials/sound/
 
 [4] image showing how digital audio data is stored. Source: [progulator.com/digital-audio/sampling-and-bit-depth/](http://progulator.com/digital-audio/sampling-and-bit-depth/) however, note that there are some very large errors in this article. Most importantly, it incorrectly does not cover how fourier transforms are used to go from the digital point sampling back to the analog signal. 
 
