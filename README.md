@@ -13,15 +13,17 @@ The current progress on this project is available at [github.com/jshap70/TensorF
 
 ## sample types
 
-Previously I mentioned how audio is a conceptionally complex structure. This is because audio data is time series data of the amplitute of the audio, however all of the information that is "stored" in it is 
+Previously I mentioned how audio is a conceptionally complex structure. This is because audio data is time series data of the amplitute of the audio, however almost all of the information that we think of as being "stored" in the sound is stored in the frequency space of the sound. The relationship between the two is extracted by using a Fourier transform. An example can be seen below, where the time series data on the left would produce the frequency chart on the right. 
 
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/microcontrollers_fft_example.png" width="550" alt="fourier transforms and signals"> [2]
 
-
-Idea is that the data would be 
-
+However, this is an over simplification. In reality, the frequency chart is adding an dimention to the data, so the frequency chart above is losing the time data of the sound. That frequency chart is only true for a small time cross section of the audio. A real frequency distribution of the sound would look as such.
+ 
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/frequency_time_data.png" width="550" alt="frequency of chello"> [3]
 
+And in fact this is what most machine learning uses to train audio on, except instead of having a height in the amplitute dimention they use image chanels and color intensity to represent it.
+
+That is why the goal of this project is to ______
 
 <img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/sample-rate.png" height="250" alt="point sampling in digital audio"> [4]
 
