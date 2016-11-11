@@ -13,16 +13,21 @@ The current progress on this project is available at [github.com/jshap70/TensorF
 
 ## sample types
 
-Previously I mentioned how audio is a conceptionally complex structure.   
+Previously I mentioned how audio is a conceptionally complex structure. 
 
-<div style="text-align:center"><img src="https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/resources/chello_amplitute.svg" width="550" alt="amplitude of chello"> [2]</div>
-
-<div style="text-align:center"><img src="https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/resources/chello_frequency.svg" width="550" alt="frequency of chello"> [2]</div>
+<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/microcontrollers_fft_example.png" width="550" alt="fourier transforms and signals"> [2]
 
 
-<div style="text-align:center"><img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/sample-rate.png" height="250" alt="point sampling in digital audio"> [3]</div>
 
-The audio used in this project has a uniform sample rate,  
+
+<img src="https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/resources/chello_frequency.svg" width="550" alt="frequency of chello"> [3]
+
+
+
+
+<img src="https://github.com/jshap70/TensorFlow-Signal-Processing/raw/master/resources/sample-rate.png" height="250" alt="point sampling in digital audio"> [4]
+
+The audio used in this project has a uniform sample rate, meaning that we're ensuring that we don't have to worry about TensorFlow actually understanding that the data inputs are time dependent.   
 The audio is mostly composed of some simple, generated audio samples which covers a varying types of sound. On the more simple side, we have simple sine, triangle, and saw waves that move through a frequency range. More difficult samples include piano recordings and voice data. The scope of this project was only on simple effects because of the time and resources available, however it would be interesting to see the impact filter complexity has on training difficulty.
 
 
@@ -49,14 +54,15 @@ Before we begin batching, validation and testing data is extracted prior to the 
 
 
 
-### sources
+### Notes / Sources
 
-[1] at least for most practical applications. An example can be seen here: [github.com/markostam/audio-deepdream-tf](https://github.com/markostam/audio-deepdream-tf)
+[1] At least this is true for most practical applications. An example can be seen here: [github.com/markostam/audio-deepdream-tf](https://github.com/markostam/audio-deepdream-tf)
 
-[2] images showing the relationship between amplitute and frequency. Source: https://processing.org/tutorials/sound/
+[2] Image showing the relationship between time series and frequency data. Source: [learn.adafruit.com/fft-fun-with-fourier-transforms/background](https://learn.adafruit.com/fft-fun-with-fourier-transforms/background)
 
+[3] images showing the relationship between amplitute and frequency. Source: https://processing.org/tutorials/sound/
 
-[3] image showing how digital audio data is stored. Source: [progulator.com/digital-audio/sampling-and-bit-depth/](http://progulator.com/digital-audio/sampling-and-bit-depth/) however, note that there are some very large errors in this article. Most importantly, it incorrectly does not cover how fourier transforms are used to go from the digital point sampling back to the analog signal. 
+[4] image showing how digital audio data is stored. Source: [progulator.com/digital-audio/sampling-and-bit-depth/](http://progulator.com/digital-audio/sampling-and-bit-depth/) however, note that there are some very large errors in this article. Most importantly, it incorrectly does not cover how fourier transforms are used to go from the digital point sampling back to the analog signal. 
 
 
 [misc]  
