@@ -38,7 +38,9 @@ The audio used in this project has a uniform sample rate, which allows us to bat
 
 # the network
 
-Starting off I used a standard, fully connected regression neural network with varying depths of hidden layers. The goal of this network was to try to overfit the training data to show that it can at least be brute forced.
+Intuitively, it would make sense that a standard linear network would most likely not be able to properly model this problem. However, I still wanted to form a baseline 
+
+ I used a standard, fully connected regression neural network with varying depths of hidden layers. The goal of this network was to try to overfit the training data to show that it can at least be brute forced.
 
 Because this problem is attempting to directly emulate a filtering effect, it seems somewhat intuitive that this problem would be decently well represented by a convolutional network. If we could get the neural net to understand the audio input, we could train a convolutional layer to understand the change in the data from the input to the output. This might also allow us to combine convolutional layers which are trained from different filters, but more on that later.
 

@@ -15,7 +15,7 @@ def get_test():
     return input_set, output_set
 
 
-def run_test(x, y, P, MSE, sess):
+def run_test(x, y, P, MSE, sess, run_name=None):
     test_input_batched, test_output_batched = get_test()
 
     (test_p, mse) = sess.run([P, MSE],feed_dict={x:test_input_batched.reshape(-1, test_input_batched.shape[1], 1), y:test_output_batched.reshape(-1, test_output_batched.shape[1], 1)})
@@ -28,4 +28,9 @@ def run_test(x, y, P, MSE, sess):
 
     p = p.reshape(p.shape[0] * p.shape[1])
 
-    write_output(p, 'beethoven_opus10_generated.wav')
+    filename = 'beethoven_opus10_generated.wav'
+
+    if run_name is not None:
+        filename = run_name + '/' + filename
+
+    write_output(p, filename)
