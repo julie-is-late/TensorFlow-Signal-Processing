@@ -51,4 +51,7 @@ def gen_nonlin(layer_width):
 def run_nonlin(hidden_width, epochs):
     # oh god what have I done
     x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std = gen_nonlin(hidden_width)
-    run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'nonlinear', hidden_width, epochs)
+    sess = tf.Session()
+    sess.run(tf.initialize_all_variables())
+    run(sess, x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'nonlinear', hidden_width, epochs)
+    return x, P, sess

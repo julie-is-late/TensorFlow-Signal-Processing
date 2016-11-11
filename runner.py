@@ -5,16 +5,14 @@ import tensorflow as tf
 
 from util import header
 
-def run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, dataset, net_type, hidden_width, epochs, batch_size=500, extra=None, check_dist=None):
+def run(sess, x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, dataset, net_type, hidden_width, epochs, batch_size=500, extra=None, check_dist=None):
     try:
-        actually_run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, dataset, net_type, hidden_width, epochs, batch_size=batch_size, extra=extra, check_dist=check_dist)
+        actually_run(sess, x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, dataset, net_type, hidden_width, epochs, batch_size=batch_size, extra=extra, check_dist=check_dist)
     except KeyboardInterrupt:
         print('Interrupted')
 
 
-def actually_run(x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, dataset, net_type, hidden_width, epochs, batch_size=500, extra=None, check_dist=None):
-    sess = tf.Session()
-    sess.run(tf.initialize_all_variables())
+def actually_run(sess, x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, dataset, net_type, hidden_width, epochs, batch_size=500, extra=None, check_dist=None):
 
     ckpt_dir = "./tmp/%s/%s/%d/" % (dataset, net_type, hidden_width)
     if extra is not None:

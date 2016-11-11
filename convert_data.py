@@ -53,3 +53,8 @@ def export_filtered_audio(directory):
     for file in os.listdir(directory):
         if file.endswith(".wav"):
             export_data(directory, file)
+
+
+def write_output(output, filename):
+    OUT_DIR = './data'
+    wavio.write(OUT_DIR + '/' + filename, output, 44100)
