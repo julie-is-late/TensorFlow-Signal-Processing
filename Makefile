@@ -1,0 +1,6 @@
+all: pdf
+
+pdf: 
+	pandoc -f markdown -o README.pdf README.md --variable=geometry:"margin=0.5in" --highlight-style=zenburn
+
+
