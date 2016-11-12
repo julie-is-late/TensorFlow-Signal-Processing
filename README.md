@@ -63,9 +63,9 @@ Because it is time series data, the batching process is a bit trickier. Although
 
 Before we look at the netwroks themselves, lets look at the expected input and output. 
 
-[input](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20pre%20-%20beethoven_opus10_1.wav)
+input: [![Play Input](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20pre%20-%20beethoven_opus10_1.wav)
 
-[output](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20post%20-%20beethoven_opus10_1.wav)
+expected output: [![Play output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20post%20-%20beethoven_opus10_1.wav)
 
 
 First up, the results of the linear network.  
