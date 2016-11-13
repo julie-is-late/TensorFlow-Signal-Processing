@@ -79,7 +79,8 @@ First up, the results of the linear network.
 
 Predicted Output of Linear Network: [![Play linear generated output](resources/play.png)](https://soundcloud.com/user-185449259/linear-regression-test?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)
 
-Well... it's bad. Actually it's somewhat unsurprising that it is just as bad as it is. First, lets look at the numbers behind it and see if that tells us why it's bad.
+It's bad. Though it's not all that surprising, honestly. It recognizably sounds a lot like the training data, which indicates that we have overtrained on the data as   
+Lets look at the numbers behind it and see if that tells us why it's bad.
 
 ```python
 x, y, P, MSE, sess = run_lin(1000, 4000)
@@ -96,11 +97,8 @@ run_test(x, y, P, MSE, sess, run_name='best_linear')
   test std: 0.0344703680322
 ```
 
-Surprisingly, the training and validation mse's are higher than the testing ones. So  
-
-
-
-Firstly, I found the network was only accurate with around 1000 nodes, which in and of itself poses a number of issues. It took 4000 epochs to train the data, which even then was just barely able to overfit on the training data. An rmse value that is only half of the standard deviation of the input set is not terrible, but for training we really expect that to be lower. On top of that, it took almost 5 hours to train this network, and for that time I wasa hogging as much of the math department's server as I could.  
+Surprisingly, the training and validation mse's are higher than the testing ones. This was one of the first indications that MSE may not be the best judge of accuracy for this problem, but more on this later.  
+I found the network was only accurate with around 1000 nodes, which in and of itself poses a number of issues. It took 4000 epochs for the mse to converge, which even then was just barely able to overfit on the training data: a training rmse value that is half of the input set std is pretty terrible. On top of that, it took almost 5 hours to train this network, and that was while I was hogging as much of the math department's server as I could.  
 Interestingly   
 
 There are a couple of possible reasons why the validation error could be equally as low as 
