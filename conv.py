@@ -41,11 +41,12 @@ def gen_conv(layer_width, filter_size):
     dyn_input_shape = tf.shape(x_4)
     batch_size = dyn_input_shape[0]
 
-    w2 = tf.Variable(tf.truncated_normal([1, filter_size, 1, layer_width], stddev=std), name='w2')
+    # w2 = w0 (because of transpose)
+    # w2 = tf.Variable(tf.truncated_normal([1, filter_size, 1, layer_width], stddev=std), name='w2')
     b2 = tf.Variable(tf.truncated_normal([1, 1], stddev=std), name='b2')
     conv_2 = tf.nn.conv2d_transpose(
         lay1,
-        w2,
+        w0,
         output_shape=tf.pack([batch_size, 1, output_set.shape[1], 1]),
         strides=[1,1,1,1],
         padding='SAME')
@@ -55,7 +56,7 @@ def gen_conv(layer_width, filter_size):
     P = tf.squeeze(lay2) # drop size 1 dim (channels)
 
     MSE = tf.reduce_mean(tf.square(lay2 - y_4))
-    L2 = alpha * (tf.nn.l2_loss(w0) + tf.nn.l2_loss(w1) + tf.nn.l2_loss(w2))
+    L2 = alpha * (tf.nn.l2_loss(w0) + tf.nn.l2_loss(w1))
 
     optimizer = tf.train.AdamOptimizer().minimize(MSE + L2)
 
@@ -66,7 +67,6 @@ def gen_conv(layer_width, filter_size):
           "b0": b0,
           "w1": w1,
           "b1": b1,
-          "w2": w2,
           "b2": b2,
           "global_step": global_step})
 
