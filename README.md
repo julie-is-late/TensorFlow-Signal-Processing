@@ -9,6 +9,7 @@ Audio is an interesting medium to work in for machine learning, as like image da
 In the past, doing signal processing in machine learning involved doing some manual decomposition of the input in order to abstract away the signal processing [1]. Often audio would be rendered into images of the spectrogram, which show the frequency distribution of the audio. While this works well for classification problems, it lacks accuracy for end to end regression problems like ours. For that, we need to do actual signal processing in order to detect the features that matter.  
 
 The current progress on this project is available at [github.com/jshap70/TensorFlow-Signal-Processing](http://github.com/jshap70/TensorFlow-Signal-Processing)  
+The audio files and results can be seen [here](https://soundcloud.com/user-185449259/sets/tensorflow-signal-processing-soundfiles), though the relevant ones are linked as needed in the paper.
 
 
 ## sample types and why we care
@@ -30,8 +31,6 @@ That is why the goal of this project is to attempt to have the network learn the
 Digital audio data is stored as sampled points from the amplitude vs time graph, which is to be expected given that it's the direct form -albeit with a Fourier transform- that the output needs to be. A basic example can be seen below.  
 
 ![alt text](resources/sample-rate.png "point sampling in digital audio")[5]
-
-The audio used to train this project is mostly composed of some simple, generated audio samples which covers a varying types of sound. On the more simple side, we have simple sine, triangle, and saw waves that move through a frequency range. More difficult samples include piano recordings and voice data. The scope of this project was only on simple effects because of the time and resources available; however, it would be interesting to see the impact filter complexity has on training difficulty.  
 
 The audio used in this project has a uniform sample rate, which allows us to batch it easier.  
 
@@ -59,22 +58,28 @@ Because it is time series data, the batching process is a bit trickier. Although
 
 *Side note: It might seem at first that we would want to take cuts of the data at small enough intervals to only allow for a handful of oscillations in the data. This might ensure that the net would get as close as possible of an idea of the instantaneous frequency data. But in reality this wont work. The issue is that the length of an oscillation is directly the result of pitch, so if the pitch changes the window might then cut off parts which are needed to extract the data. This is another reason why we must rely on the convolutional filters to slice the data for us.  
 
-# results
+## Training data
 
-Before we look at the netwroks themselves, lets look at the expected input and output. 
+The training data this project is mostly composed of some simple, generated audio samples which covers a varying types of sound and pitches. On the more simple side, we have simple sine, triangle, and saw waves that move through a frequency range. Starting off I just use a lowpass (cuts off high frequencies) effect as the filter, but later I used a more complex effect made with some pedal effects.  
+An example of the lowpass training data can be heard here:  
+input: [![Play Input](resources/play.png)](https://soundcloud.com/user-185449259/lowpass-pre-train?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)  
+output: [![Play Output](resources/play.png)](https://soundcloud.com/user-185449259/lowpass-post-train?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)
 
-input: [![Play Input](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20pre%20-%20beethoven_opus10_1.wav)
 
-expected output: [![Play output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20post%20-%20beethoven_opus10_1.wav)
+# Results
+
+Before we look at the various netwroks themselves, lets look at the expected input and output.  
+input: [![Play Input](resources/play.png)](https://soundcloud.com/user-185449259/lowpass-pre-test?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)  
+expected output: [![Play Output](resources/play.png)](https://soundcloud.com/user-185449259/lowpass-post-test?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)  
 
 
 ## Linear Regression
 
 First up, the results of the linear network.  
 
-Predicted Output of Linear Network: [![Play linear generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/best_linear_beethoven_opus10_generated.wav?raw=true)
+Predicted Output of Linear Network: [![Play linear generated output](resources/play.png)](https://soundcloud.com/user-185449259/linear-regression-test?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)
 
-Well... it's bad. Actually it's somewhat unsurprising that it is just as bad as it is. 
+Well... it's bad. Actually it's somewhat unsurprising that it is just as bad as it is. First, lets look at the numbers behind it and see if that tells us why it's bad.
 
 ```python
 x, y, P, MSE, sess = run_lin(1000, 4000)
@@ -91,7 +96,9 @@ run_test(x, y, P, MSE, sess, run_name='best_linear')
   test std: 0.0344703680322
 ```
 
-Here's the 
+Surprisingly, the training and validation mse's are higher than the testing ones. So  
+
+
 
 Firstly, I found the network was only accurate with around 1000 nodes, which in and of itself poses a number of issues. It took 4000 epochs to train the data, which even then was just barely able to overfit on the training data. An rmse value that is only half of the standard deviation of the input set is not terrible, but for training we really expect that to be lower. On top of that, it took almost 5 hours to train this network, and for that time I wasa hogging as much of the math department's server as I could.  
 Interestingly   
