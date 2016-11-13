@@ -68,7 +68,11 @@ input: [![Play Input](resources/play.png)](https://rawcdn.githack.com/jshap70/Te
 expected output: [![Play output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20post%20-%20beethoven_opus10_1.wav)
 
 
+## Linear Regression
+
 First up, the results of the linear network.  
+
+Predicted Output of Linear Network: [![Play linear generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/best_linear_beethoven_opus10_generated.wav?raw=true)
 
 ```python
 x, y, P, MSE, sess = run_lin(1000, 4000)
@@ -84,8 +88,6 @@ run_test(x, y, P, MSE, sess, run_name='best_linear')
   test rmse: 0.0344621
   test std: 0.0344703680322
 ```
-
-... They're bad. Really, really bad.  
 
 Here's the 
 
