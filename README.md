@@ -74,6 +74,8 @@ First up, the results of the linear network.
 
 Predicted Output of Linear Network: [![Play linear generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/best_linear_beethoven_opus10_generated.wav?raw=true)
 
+Well... it's bad. Actually it's somewhat unsurprising that it is just as bad as it is. 
+
 ```python
 x, y, P, MSE, sess = run_lin(1000, 4000)
 run_test(x, y, P, MSE, sess, run_name='best_linear')
