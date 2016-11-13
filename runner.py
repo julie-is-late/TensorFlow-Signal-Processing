@@ -35,8 +35,10 @@ def actually_run(sess, x, y, MSE, P, optimizer, global_step, run_time, saver, in
     print("starting from epoch:", epoch)
 
     # only print if printing more than once
+    printing = False
     if epoch + check_dist < epochs:
-        header()
+        header(newLine=False)
+        printing = True
 
     while epoch < epochs:
         perm = np.random.permutation(input_set.shape[0])
@@ -46,7 +48,9 @@ def actually_run(sess, x, y, MSE, P, optimizer, global_step, run_time, saver, in
             batch = perm[ start:start + batch_size ]
             sess.run([optimizer],feed_dict={x:input_set[batch],y:output_set[batch]})
             start += batch_size
-        print('.', end="", flush=True)
+
+        if printing:
+            print('.', end="", flush=True)
 
         epoch+=1
         sess.run(global_step.assign(epoch))
@@ -62,8 +66,10 @@ def actually_run(sess, x, y, MSE, P, optimizer, global_step, run_time, saver, in
             (mse_valid, p_valid) = sess.run([MSE, P],feed_dict={x:valid_in_batches,y:valid_out_batches})
             train_std = (np.squeeze(output_set) - p_train).std()
             valid_std = (np.squeeze(valid_out_batches) - p_valid).std()
-            print()
-            print('epoch:%5d %12.5f%12.5f%12.5f%12.5f%12.5f%12.5f%12.5f%12.1f' % (epoch, mse_train, mse_valid, np.sqrt(mse_train), np.sqrt(mse_valid), train_std, valid_std, train_ref_std, total_time), end=" ")
+
+            if printing:
+                print()
+                print('epoch:%5d %12.5f%12.5f%12.5f%12.5f%12.5f%12.5f%12.5f%12.1f' % (epoch, mse_train, mse_valid, np.sqrt(mse_train), np.sqrt(mse_valid), train_std, valid_std, train_ref_std, total_time), end=" ")
 
 
     # compute final results (and ensure computed if we're already done)

@@ -20,6 +20,8 @@ def weight_variable(shape, std=0.1):
     initial = tf.truncated_normal(shape, stddev=std)
     return tf.Variable(initial)
 
-def header():
-    print('\t                         mse                    rmse                                 std            ')
-    print('\t        training  validation    training  validation    training  validation   reference     runtime')
+def header(newLine=True):
+    print('\t                         mse                    rmse                                 std             ')
+    print('\t        training  validation    training  validation    training  validation   reference     runtime ', end="", flush=True)
+    if newLine:
+        print()
