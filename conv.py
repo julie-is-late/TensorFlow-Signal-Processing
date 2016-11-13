@@ -61,6 +61,7 @@ def gen_conv(layer_width, filter_size):
     optimizer = tf.train.AdamOptimizer().minimize(MSE + L2)
 
     global_step = tf.Variable(0, name='global_step', trainable=False)
+    run_time = tf.Variable(0, name='run_time', trainable=False)
 
     saver = tf.train.Saver(
         { "w0": w0,
@@ -68,15 +69,16 @@ def gen_conv(layer_width, filter_size):
           "w1": w1,
           "b1": b1,
           "b2": b2,
-          "global_step": global_step})
+          "global_step": global_step,
+          "run_time": run_time })
 
-    return x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std
+    return x, y, MSE, P, optimizer, global_step, run_time, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std
 
 
 def run_conv(hidden_width, filter_size, epochs, batch_size=50, save_dist=None):
     # oh god what have I done
-    x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std = gen_conv(hidden_width, filter_size)
+    x, y, MSE, P, optimizer, global_step, run_time, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std = gen_conv(hidden_width, filter_size)
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
-    run(sess, x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'convolution', hidden_width, epochs, batch_size=batch_size, extra=filter_size, check_dist=save_dist)
+    run(sess, x, y, MSE, P, optimizer, global_step, run_time, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'convolution', hidden_width, epochs, batch_size=batch_size, extra=filter_size, check_dist=save_dist)
     return x, y, P, MSE, sess

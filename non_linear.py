@@ -35,6 +35,7 @@ def gen_nonlin(layer_width):
     optimizer = tf.train.AdamOptimizer().minimize(MSE + L2)
 
     global_step = tf.Variable(0, name='global_step', trainable=False)
+    run_time = tf.Variable(0, name='run_time', trainable=False)
 
     saver = tf.train.Saver(
         { "w0": w0,
@@ -43,15 +44,16 @@ def gen_nonlin(layer_width):
           "b1": b1,
           "w2": w2,
           "b2": b2,
-          "global_step": global_step})
+          "global_step": global_step,
+          "run_time": run_time })
 
-    return x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std
+    return x, y, MSE, P, optimizer, global_step, run_time, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std
 
 
 def run_nonlin(hidden_width, epochs):
     # oh god what have I done
-    x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std = gen_nonlin(hidden_width)
+    x, y, MSE, P, optimizer, global_step, run_time, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std = gen_nonlin(hidden_width)
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
-    run(sess, x, y, MSE, P, optimizer, global_step, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'nonlinear', hidden_width, epochs)
+    run(sess, x, y, MSE, P, optimizer, global_step, run_time, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'nonlinear', hidden_width, epochs)
     return x, y, P, MSE, sess

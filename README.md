@@ -101,8 +101,11 @@ Surprisingly, the training and validation mse's are higher than the testing ones
 I found the network was only accurate with around 1000 nodes, which in and of itself poses a number of issues. It took 4000 epochs for the mse to converge, which even then was just barely able to overfit on the training data: a training rmse value that is half of the input set std is pretty terrible. On top of that, it took almost 5 hours to train this network, and that was while I was hogging as much of the math department's server as I could.  
 Interestingly   
 
-There are a couple of possible reasons why the validation error could be equally as low as 
 
+
+# Thoughs
+
+Why is MSE a bad judge of quality:
 
 
 ## future plans
