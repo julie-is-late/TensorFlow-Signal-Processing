@@ -49,8 +49,7 @@ def actually_run(sess, x, y, MSE, P, optimizer, global_step, run_time, saver, in
             sess.run([optimizer],feed_dict={x:input_set[batch],y:output_set[batch]})
             start += batch_size
 
-        if printing:
-            print('.', end="", flush=True)
+        print('.', end="", flush=True)
 
         epoch+=1
         sess.run(global_step.assign(epoch))
