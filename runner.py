@@ -54,7 +54,7 @@ def actually_run(sess, x, y, MSE, P, optimizer, global_step, run_time, saver, in
         epoch+=1
         sess.run(global_step.assign(epoch))
 
-        if epoch % check_dist == 0:
+        if epoch % check_dist == 0 or epoch == epochs:
             curr_time = time.time()
             total_time += (curr_time - run_start)/60
             sess.run(run_time.assign(total_time))
