@@ -48,10 +48,10 @@ def gen_lin(layer_width):
     return x, y, MSE, P, optimizer, global_step, run_time, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std
 
 
-def run_lin(hidden_width, epochs):
+def run_lin(hidden_width, epochs, check_dist=None):
     # oh god what have I done
     x, y, MSE, P, optimizer, global_step, run_time, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std = gen_lin(hidden_width)
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
-    run(sess, x, y, MSE, P, optimizer, global_step, run_time, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'linear', hidden_width, epochs)
+    run(sess, x, y, MSE, P, optimizer, global_step, run_time, saver, input_set, output_set, valid_in_batches, valid_out_batches, train_ref_std, 'lowpass', 'linear', hidden_width, epochs, check_dist=check_dist)
     return x, y, P, MSE, sess
