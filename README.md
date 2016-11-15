@@ -79,7 +79,7 @@ First up, the results of the linear network.
 
 Predicted Output of Linear Network: [![Play linear generated output](resources/play.png)](https://soundcloud.com/user-185449259/linear-regression-test?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)
 
-It's bad. Though it's not all that surprising, honestly. It recognizably sounds a lot like the training data, which indicates that we have overtrained on the dat  
+It's bad. Though it's not all that surprising, honestly. It recognizably sounds a lot like the training data, which indicates that we have overtrained on the data  
 Lets look at the numbers behind it and see if that tells us why it's bad.
 
 ```python
