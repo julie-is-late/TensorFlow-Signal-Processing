@@ -181,7 +181,7 @@ My guess as to why this value is not a good estimation of error is related to ho
 
 ### Network Complexity
 Given more time, I would have worked on a system which would use different convolutional layers with different filter sizes in order to allow the fully connected layer even more information when applying its effect.  
-After building up a sufficiently well trained convolutional network to extract the audio features, I would then try to extract those layers from the network and see if we then coudln't train a new middle hidden layer significantly easier. This would allow us to emulate effects that we don't have a lot of training information on, such as just short sound clips.  
+After building up a sufficiently well trained convolutional network to extract the audio features, I would then try to extract those layers from the network and see if we then couldn't train a new middle hidden layer significantly easier. This would allow us to emulate effects that we don't have a lot of training information on, such as just short sound clips.  
 
 ## End
 Overall I think this project was a decent success. Going forward I want to continue to experiment with trying to build a more complex convolutional system, but the time scale of this project simply didn't allow for that.  
