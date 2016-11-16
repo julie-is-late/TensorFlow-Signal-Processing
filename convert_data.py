@@ -57,4 +57,4 @@ def export_filtered_audio(directory):
 
 def write_output(output, filename):
     OUT_DIR = './sound_files/out'
-    wavio.write(OUT_DIR + '/' + filename, output, 44100, sampwidth=4)
+    wavio.write(OUT_DIR + '/' + filename, output, 44100, sampwidth=2)
