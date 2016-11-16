@@ -180,7 +180,7 @@ One thing I'm not quite sure about is why the MSE is such a bad judge of output 
 My guess as to why this value is not a good estimation of error is related to how the audio is constantly making small oscillations. I believe it's possible to have value which provides something very close to the correct audio but also provides a larger error than some value which will cause the audio to fall apart. I wonder if the value used to train the network could actually be doing raw frequency analysis of it's own in order to guide the training of the network, though that may be seen as "cheating" given the scope of the problem.  
 
 ### Network Complexity
-Given more time, I would have worked on a system which would use different convolutional layers whith different filter sizes in order to allow the fully connected layer even more information when applying it's effect.  
+Given more time, I would have worked on a system which would use different convolutional layers with different filter sizes in order to allow the fully connected layer even more information when applying its effect.  
 After building up a sufficiently well trained convolutional network to extract the audio features, I would then try to extract those layers from the network and see if we then coudln't train a new middle hidden layer significantly easier. This would allow us to emulate effects that we don't have a lot of training information on, such as just short sound clips.  
 
 ## End
