@@ -176,19 +176,19 @@ As expected, when the network was set up with different filters it seems signifi
 # Final Thoughs
 
 ### MSE
-One thing I'm not quite sure about is why the MSE is such a bad judge of output quality. Taking a look at the ouput data in [convolution](#Convolution)
+One thing I'm not quite sure about is why the MSE is such a bad judge of output quality. Taking a look at the [convolution](#convolution) ouput, we can see that similar to the [linear](#linear-regression) and [nonlinear](#nonlinear-regression) networks, the testing error is quite significantly lower than the training error. Furthermore, given that the output of the first two networks were completely incorrect and the convolutional network was correct, you would expect a drastic decrease in error on that output. Yet the difference is actually pretty small.  
+My theory as to why this value is not a good estimation of error is related to how the audio is constantly making small oscillations. I believe it's possible to have value which provides something very close to the correct audio but also provides a larger error than some value which will cause the audio to fall apart. I wonder if the value used to train the network could actually be doing raw frequency analysis of it's own in order to guide the training of the network, though that may be seen as "cheating" given the scope of the problem.  
 
+### Network Complexity
+Given more time, I would have worked on a system which would use different convolutional layers whith different filter sizes in order to allow the fully connected layer even more information when applying it's effect.  
+After building up a sufficiently well trained convolutional network to extract the audio features, I would then try to extract those layers from the network and see if we then coudln't train a new middle hidden layer significantly easier. This would allow us to emulate effects that we don't have a lot of training information on, such as just short sound clips.  
 
-## Future Plans
+## End
+Overall I think this project was a decent success. Going forward I want to continue to experiment with trying to build a more complex convolutional system, but the time scale of this project simply didn't allow for that.  
 
-// maybe we could do multiple filter sizes together? 
+Tanks for reading!
 
-// once we've trained the convolutional layers responsible for converting to and from raw audio data, maybe re-use them to train on another filter so we can focus more on training the middle layers
-
-// RNN’s and how they might help with time series data and maybe allow us to get rid of the sliding window batching
-
-
-### Notes / Sources
+#### Notes / Sources
 
 [1] At least this is true for most practical applications. An example can be seen here: [github.com/markostam/audio-deepdream-tf](https://github.com/markostam/audio-deepdream-tf)
 
