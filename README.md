@@ -9,7 +9,7 @@ Audio is an interesting medium to work in for machine learning, as like image da
 In the past, doing signal processing in machine learning involved doing some manual decomposition of the input in order to abstract away the signal processing [1]. Often audio would be rendered into images of the spectrogram, which show the frequency distribution of the audio. While this works well for classification problems, it lacks accuracy for end to end regression problems like ours. For that, we need to do actual signal processing in order to detect the features that matter.  
 
 The current progress on this project is available at [github.com/jshap70/TensorFlow-Signal-Processing](http://github.com/jshap70/TensorFlow-Signal-Processing)  
-The audio files and results can be seen [here](https://soundcloud.com/user-185449259/sets/tensorflow-signal-processing-soundfiles), though the relevant ones are linked as needed in the paper.
+The audio files and results can be seen [here](https://github.com/jshap70/TensorFlow-Signal-Processing/tree/master/sound_files), though the relevant ones are linked as needed in the paper.
 
 
 ## sample types and why we care
@@ -62,25 +62,28 @@ Because it is time series data, the batching process is a bit trickier. Although
 
 The training data this project is mostly composed of some simple, generated audio samples which covers a varying types of sound and pitches. On the more simple side, we have simple sine, triangle, and saw waves that move through a frequency range. Starting off I just use a lowpass (cuts off high frequencies) effect as the filter, but later I used a more complex effect made with some pedal effects.  
 An example of the lowpass training data can be heard here:  
-input: [![Play Input](resources/play.png)](https://soundcloud.com/user-185449259/lowpass-pre-train?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)  
-output: [![Play Output](resources/play.png)](https://soundcloud.com/user-185449259/lowpass-post-train?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)
+input: [![Play Input](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20pre%20-%20square.wav)  
+output: [![Play Output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20post%20-%20square.wav)
 
 
 # Results
 
 Before we look at the various netwroks themselves, lets look at the expected input and output.  
-input: [![Play Input](resources/play.png)](https://soundcloud.com/user-185449259/lowpass-pre-test?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)  
-expected output: [![Play Output](resources/play.png)](https://soundcloud.com/user-185449259/lowpass-post-test?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)  
+input: [![Play Input](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20pre%20-%20beethoven_opus10_1.wav?raw=true)  
+expected output: [![Play Output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20post%20-%20beethoven_opus10_1.wav?raw=true)  
 
 
 ## Linear Regression
 
 First up, the results of the linear network.  
 
-Predicted Output of Linear Network: [![Play linear generated output](resources/play.png)](https://soundcloud.com/user-185449259/linear-regression-test?in=user-185449259/sets/tensorflow-signal-processing-soundfiles)
+Predicted Output of Linear Network @ 20 epochs: [![Play linear generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/linear_epoch=20_beethoven_opus10_generated.wav?raw=true)
 
-It's bad. Though it's not all that surprising, honestly. It recognizably sounds a lot like the training data, which indicates that we have overtrained on the data  
-Lets look at the numbers behind it and see if that tells us why it's bad.
+Huh, strangly it's just white noise. Maybe we just need to train it more. 
+
+Predicted Output of Linear Network @ 4000 epochs: [![Play linear generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/linear_epoch=4000_beethoven_opus10_generated.wav?raw=true)
+
+Well, it at least sounds like audio now, but it really only sounds like the training data. Nothing from the testing data is really retained in the slightest. It's pretty clear that we've overtrained the network. Lets look at some of the numbers behind it and see if that tells us why it's as bad as it though bad.
 
 ```python
 x, y, P, MSE, sess = run_lin(1000, 4000)
@@ -97,8 +100,8 @@ run_test(x, y, P, MSE, sess, run_name='best_linear')
   test std: 0.0344703680322
 ```
 
-Surprisingly, the training and validation mse's are higher than the testing ones. This was one of the first indications that MSE may not be the best judge of accuracy for this problem, but more on this later.  
-I found the network was only accurate with around 1000 nodes, which in and of itself poses a number of issues. It took 4000 epochs for the mse to converge, which even then was just barely able to overfit on the training data: a training rmse value that is half of the input set std is pretty terrible. On top of that, it took almost 5 hours to train this network, and that was while I was hogging as much of the math department's server as I could.  
+Surprisingly, the training and validation mse's are higher than the testing ones. Given how the testing output sounds, you would expect it to be larger than the training. This was one of the first indications that MSE may not be the best judge of accuracy for this problem, but more on this later.  
+I found the linear network was only accurate with around 1000 nodes, which in and of itself poses a number of issues. It took 4000 epochs for the mse to converge, which even then was just barely able to overfit on the training data: a training rmse value that is half of the input set std is pretty terrible. On top of that, it took almost 5 hours to train this network, and that was while I was hogging as much of the math department's server as I could.  
 Interestingly   
 
 
