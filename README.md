@@ -8,7 +8,7 @@ The objective of this project is to evaluate the effectiveness of doing audio ef
 Audio is an interesting medium for machine learning. Like image data, the output can be judged both quantitatively and qualitatively. On top of this, audio itself has a complex structure. The additive property of waves can cause some unforeseen outcomes. On top of that, digital audio data is inherently convoluted: it is stored as a time series of points which are sampled from the audio signal itself. These points are fast Fourier transformed back into the signal whenever the audio is ready to be output. Because of this, a lot of the information which is affected by effects is hidden behind this signal processing problem.*  
 In the past, doing signal processing in machine learning involved doing some manual decomposition of the input in order to abstract away the signal processing [1]. Often audio would be rendered into images of the spectrogram, which show the frequency distribution of the audio. While this works fine for classification problems, it seems unnecessary for an end to end problem like the one this paper is focused on. For that, we need to do actual signal processing in order to detect the features that matter.  
 
-*note that a lot of effects can be done as transformations are done as an application to an untransformed wave, but it's often the case that the effect is easier when done in the frequency space.  
+*Note - A lot of effects can still be done as transformations are done as an application to an untransformed wave, but it's often the case that the effect is significantly easier when done in the frequency space.  
 
 The current progress on this project is available at [github.com/jshap70/TensorFlow-Signal-Processing](http://github.com/jshap70/TensorFlow-Signal-Processing)  
 The audio files and results can be seen [here](https://github.com/jshap70/TensorFlow-Signal-Processing/tree/master/sound_files), though the relevant ones are linked as needed in the paper.
@@ -20,7 +20,7 @@ Previously I mentioned how audio is a conceptually complex structure. This is be
 
 ![alt text](resources/microcontrollers_fft_example.png "fourier transforms and signals")[2]
 
-However, this is an oversimplification. In reality, the frequency chart is adding a dimension to the data, so represnting it in 2D space means that the frequency chart above is only true for a small time cross section of the audio. A real frequency distribution of the sound would look as such.  
+However, this is an oversimplification. In reality, the frequency chart is adding a dimension to the data, so represnting it in 2D space means that the frequency chart above is only valid for a small time cross section of the audio. A real frequency distribution of the sound would look as such.  
  
 ![alt text](resources/frequency_time_data.png "frequency of chello")[3]
 
@@ -51,12 +51,12 @@ So currently we've built up a system which should be able to look at the data in
 
 ## Sampling and Batching
 
-Looking at the data itself, the wav files are stereo 16bit PCM (integer)) files. To begin with, I converted the data to a 32bit float wav file and normalized the audio to fit within that standard. I split apart each file into mono tracks because it allows for us to experiment with different network designs a lot faster. However, there are filters which have different effects across stereo channels, so we will lose the ability to train on those for now.  
-The audio we are training on is a set of sine, square, and saw waves which travel through a range of requencies. Although these waves are very basic, the idea is that the simpler wave shapes might help to train the network to understand frequency analyis easier. The validation data is extracted from the same dataset as the training, but the testing data is entirely different. It uses the same filter, but it is a recording of a piano being played through it. The idea is that this is a much more complex wave shape, so it will be a better test of the network.  
+Looking at the data itself, the wav files are stereo 16bit PCM integer files. To begin with, I converted the data to a 32bit float wav file and normalized the audio to fit within that standard. I split apart each file into mono tracks because it allows for us to experiment with different network designs a lot faster. However, there are filters which have different effects across stereo channels, so we will lose the ability to train on those for now.  
+The audio we are training on is a set of sine, square, and saw waves which vary through a range of frequencies. Although these waves are very basic, the idea is that these more simple audio samples might help to train the network to understand frequency analyis easier. The validation data is split off from the training dataset, but the testing data is entirely different. Although the testing data uses the same filter, it is testing how the network performs when given a much more difficult problem: a piano. The idea is that this has a much more complex wave shape, so it will be a better test of how well the network understands the problem.  
 
 Because it is time series data, the batching process is a bit trickier. Although the data needs to be kept in contiguous chunks, we can still extract the smaller sections of it to train independently on to ensure the network is trained uniformly. To do this, I implemented a batching system that does a scrolling window selection of the audio for discrete time periods, and then I shuffle those batches for every epoch. If we set the offset of each window to the one next to it is smaller than the length of each window, then we can get some overlap in the windows to further increase the number of available batches.  
 
-*Side note: It might seem at first that we would want to take cuts of the data at small enough intervals to only allow for a handful of oscillations in the data. This might ensure that the net would get as close as possible of an idea of the instantaneous frequency data. But in reality this wont work. The issue is that the length of an oscillation is directly the result of pitch, so if the pitch changes the window might then cut off parts which are needed to extract the data. This is another reason why we must rely on the convolutional filters to slice the data for us.  
+Side note - It might seem at first that we would want to take sections of the data at small enough intervals to only allow for a handful of oscillations in the data. This might ensure that the network would get an idea of the instantaneous frequency data. But in reality this will not work. The issue is that the length of an oscillation is directly the result of pitch, so if the pitch changes the window might then cut off parts which are needed to extract the data. This is another reason why we must rely on the convolutional filters to slice the data for us.  
 
 ## Training data
 
@@ -72,18 +72,18 @@ Before we look at the various netwroks themselves, lets look at the expected inp
 input: [![Play Input](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20pre%20-%20beethoven_opus10_1.wav?raw=true)  
 expected output: [![Play Output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20post%20-%20beethoven_opus10_1.wav?raw=true)  
 
-*Side note: the testing outputs have a slight 'tick' to them around every half a second. This is a result of my hackish batching system for testing. Esentially it's just the padding on the convolution reseting the audio data to 0.0 at the edges of the batches, so the audio clicks as the output snaps abruptly to this value. Given time, I could have written one that used a sliding window system similar to the training data and eliminated this noise.  
+Note that the generated testing outputs will all have a slight 'tick' to them around every half a second. This is a result of my hackish batching system for testing. Esentially it's just the padding on the convolution reseting the audio data to 0.0 at the edges of the batches, so the audio clicks as the output snaps abruptly to this value. Given time, I could have written one that used a sliding window system similar to the training data and eliminated this noise.  
 
 ## Linear Regression
 
 First up, the results of the linear network.  
 
-Based on trail and error, I found the linear network converged best when the hidden layer had around 1000 nodes, which posed a number of issues. The largest of which was that it took almost 5 hours to train this network, and that was while I was hogging as much of the math department's server as I could.  
-After after setting up the network, I ran it and got the following output after training it a little bit.  
+Based on trail and error, I found the linear network converged best when the hidden layer had around 1000 nodes; however, a network of this size is entirely unrealistic. It took almost 5 hours to train this network, and that was on a very powerful machine.
+Regardless, After after setting up the network, I ran it and got the following output after training it a little bit.  
 
 Predicted Output of Linear Network @ 20 epochs: [![Play linear generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/linear_epoch=20_beethoven_opus10_generated.wav?raw=true)  
 
-Huh, strangly it's just white noise. Maybe we just need to train it more. 
+Strangly it's just white noise; maybe we just need to train it more. 
 
 Predicted Output of Linear Network @ 4000 epochs: [![Play linear generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/linear_epoch=4000_beethoven_opus10_generated.wav?raw=true)
 
@@ -106,8 +106,15 @@ run_test(x, y, P, MSE, sess, run_name='best_linear')
 
 Surprisingly, the training and validation mse's are higher than the testing ones. Given how much the testing output sounds like the training set, you would expect it to be larger than the training because of overtraining. This is one of the first indications that MSE may not be the best judge of accuracy for this problem, but more on that later.  
 
-Interestingly   
+## Nonlinear Regression
 
+It's obvious linear regression isn't going to cut it, so lets move on to nonlinear regression. Similar to the linear network, I found that the nonlinear networks also only converged when the networks hidden layer had 1000 nodes.  
+
+Predicted Output of Nonlinear Network @ 20 epochs: [![Play nonlinear generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/non_lin_epoch=20_beethoven_opus10_generated.wav?raw=true)  
+
+It's somehow worse than the linear one. However, generally nonlinear networks are more difficult to train, so lets try that again but with more epochs. 
+
+Predicted Output of Nonlinear Network @ 4000 epochs: [![Play nonlinear generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/non_lin_epoch=4000_beethoven_opus10_generated.wav?raw=true)
 
 
 # Thoughs
