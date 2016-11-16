@@ -93,15 +93,10 @@ Well, it at least sounds like audio now. However, it only really sounds like the
 x, y, P, MSE, sess = run_lin(1000, 4000)
 run_test(x, y, P, MSE, sess, run_name='best_linear')
 
-  starting from epoch: 4000
-
-                  mse                    rmse                                 std
- training  validation    training  validation    training  validation   reference
-  0.00342     0.00327     0.05847     0.05722     0.05885     0.05723     0.10412
-
-  test mse: 0.00118764
-  test rmse: 0.0344621
-  test std: 0.0344703680322
+                          mse                    rmse                                 std
+   epoch training  validation    training  validation    training  validation   reference
+    4000  0.00342     0.00327     0.05847     0.05722     0.05885     0.05723     0.10412
+test mse: 0.00119      test rmse: 0.03446       test std: 0.03447
 ```
 
 Surprisingly, the training and validation mse's are higher than the testing ones. Given how much the testing output sounds like the training set, you would expect it to be larger than the training because of overtraining. This is one of the first indications that MSE may not be the best judge of accuracy for this problem, but more on that later.  
@@ -116,10 +111,58 @@ It's somehow worse than the linear one. However, generally nonlinear networks ar
 
 Predicted Output of Nonlinear Network @ 4000 epochs: [![Play nonlinear generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/non_lin_epoch=4000_beethoven_opus10_generated.wav?raw=true)
 
+It still sounds just about the same as the nonlinear output. The numbers tell a very similar story as the audio.
+
+```python
+x, y, P, MSE, sess = run_nonlin(1000, 4000)
+run_test(x, y, P, MSE, sess, run_name='non_lin_epoch=%d' % 4000)
+
+                          mse                    rmse                                 std
+   epoch training  validation    training  validation    training  validation   reference
+    4000  0.00471     0.00363     0.06866     0.06024     0.06897     0.06025     0.10219
+test mse: 0.00144      test rmse: 0.03792       test std: 0.03792
+```
+
+Overall, the nonlinear output fits pretty well with what we expected: the data is too complex for it to figure out the underlying model. 
+
+## Convolution
+
+This brings us to our last network, convolution. I generated testing testing results as I trained the network so we could see what effect the increased training levels had on it.
+
+```python
+                          mse                    rmse                                 std
+   epoch training  validation    training  validation    training  validation   reference
+       0  0.01625     0.01399     0.12748     0.11827     0.08833     0.07587     0.11131
+test mse: 0.00829      test rmse: 0.09110       test std: 0.02744
+       5  0.00202     0.00542     0.04490     0.07361     0.04497     0.07355     0.09906
+test mse: 0.00021      test rmse: 0.01464       test std: 0.01371
+      10  0.00253     0.00120     0.05026     0.03461     0.05052     0.03447     0.10856
+test mse: 0.00014      test rmse: 0.01181       test std: 0.01087
+      15  0.00194     0.00235     0.04408     0.04844     0.04439     0.04842     0.10380
+test mse: 0.00010      test rmse: 0.01023       test std: 0.01024
+      20  0.00168     0.00280     0.04100     0.05291     0.04124     0.05290     0.10097
+test mse: 0.00011      test rmse: 0.01061       test std: 0.00992
+      30  0.00180     0.00212     0.04244     0.04603     0.04261     0.04604     0.10356
+test mse: 9.1680e-05   test rmse: 0.00957       test std: 0.00951
+      40  0.00179     0.00208     0.04229     0.04556     0.04245     0.04556     0.10453
+test mse: 8.9273e-05   test rmse: 0.00945       test std: 0.00945
+      50  0.00153     0.00280     0.03918     0.05287     0.03933     0.05289     0.10946
+test mse: 9.0900e-05   test rmse: 0.00953       test std: 0.00950
+```
+And here are the predicted outputs from the convolutional network:
+* `epoch = 00` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=0_beethoven_opus10_generated.wav?raw=true)
+* `epoch = 05` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=5_beethoven_opus10_generated.wav?raw=true)
+* `epoch = 10` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=10_beethoven_opus10_generated.wav?raw=true)
+* `epoch = 20` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=20_beethoven_opus10_generated.wav?raw=true)
+* `epoch = 50` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=50_beethoven_opus10_generated.wav?raw=true)
+* `epoch = 200` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=200_beethoven_opus10_generated.wav?raw=true)
+
+First of all, this is the first time we have actually had the audio be properly output of the netwrok, so we're off to a good start. Next, it's clear that   
 
 # Thoughs
 
-Why is MSE a bad judge of quality:
+### MSE
+One thing I'm not quite sure about is why the MSE is such a bad judge of output quality.
 
 
 ## Future Plans
