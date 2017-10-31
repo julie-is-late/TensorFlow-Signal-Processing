@@ -198,9 +198,9 @@ Tanks for reading!
 
 [4] Spectrogram image from: [dwutygodnik.com/artykul/673-uwaznosc-fraktale-spektra-modele.html](http://www.dwutygodnik.com/artykul/673-uwaznosc-fraktale-spektra-modele.html)
 
-[5] Image showing how digital audio data is stored. Source: [progulator.com/digital-audio/sampling-and-bit-depth/](http://progulator.com/digital-audio/sampling-and-bit-depth/) However, note that there are some very large errors in this article. Most importantly, it incorrectly does not cover how Fourier transforms are used to go from the digital point sampling back to the analog signal and makes the common fault of believing the data is just directly interpreted as an averaging operation. 
+[5] Image showing how digital audio data is stored. WARNING: THIS SOURCE COULD BE DANGEROUS! [Google Chrome now blocks this site for suspected phishing attacks, proceed at your own risk!](https://transparencyreport.google.com/safe-browsing/search?url=http:%2F%2Fprogulator.com%2Fdigital-audio%2Fsampling-and-bit-depth%2F) Source: [progulator(.)com/digital-audio/sampling-and-bit-depth/](#link_removed) Also, note that there are some very large errors in this article. Most importantly, it incorrectly does not cover how Fourier transforms are used to go from the digital point sampling back to the analog signal and makes the common fault of believing the data is just directly interpreted as an averaging operation.
 
 
 [misc]  
 some audio midi from - http://www.piano-midi.de/brahms.htm  
-wavio - https://github.com/mgeier/python-audio/ - by Warren Weckesser
+wavio - https://github.com/mgeier/python-audio/ - by Warren Weckesser  
