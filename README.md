@@ -1,5 +1,10 @@
 # TensorFlow Signal Processing
-by Joel Shapiro
+by Julie Shapiro
+
+# UPDATE (2018/03/31)
+I've received some questions about this paper recently that make me think people are confusing it for a functional project. I should make it clear that this is merely a paper describing problem complexity and as such makes some choices that I would not recommend to someone looking to do this kind of stuff in an actual tool. The notes at the end especially about MSE and just error in general combined with the fact that I'm not using an FFT setup really takes away from what this can do at the moment.
+
+That said, I'm currently working on something pretty cool, to try to do effect emulation in a much better way. My new TitanXP is just waiting for me to finish my RNN reading :)
 
 # Problem Overview
 
@@ -61,15 +66,15 @@ Side note - It might seem at first that we would want to take sections of the da
 
 The training data this project is mostly composed of some simple, generated audio samples which covers varying types of sound and pitches. On the more simple side, we have sine, square, and saw waves that move through a frequency range. Starting off I just use a lowpass (cuts off high frequencies) effect as the filter, but later I used a more complex effect made with some pedal effects. Unfortunately I have not had enough time to do very in depth testing with the later yet, so this paper will not be able to cover it.  
 An example of the lowpass training data can be heard here:  
-input: [![Play Input](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20pre%20-%20square.wav)  
-output: [![Play Output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20post%20-%20square.wav)
+input: [![Play Input](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/lowpass%20-%20pre%20-%20square.wav)  
+output: [![Play Output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/lowpass%20-%20post%20-%20square.wav)
 
 
 # Results
 
 Before we look at the various networks themselves, let's look at the expected input and output.  
-input: [![Play Input](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20pre%20-%20beethoven_opus10_1_mono.wav)  
-expected output: [![Play Output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/lowpass%20-%20post%20-%20beethoven_opus10_1_mono.wav)  
+input: [![Play Input](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/lowpass%20-%20pre%20-%20beethoven_opus10_1_mono.wav)  
+expected output: [![Play Output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/lowpass%20-%20post%20-%20beethoven_opus10_1_mono.wav)  
 
 Note that the generated testing outputs will all have a slight 'tick' to them around every half a second. This is a result of my hackish batching system for testing. Essentially it's just the padding on the convolution resetting the audio data to 0.0 at the edges of the batches, so the audio clicks as the output snaps abruptly to this value. Given time, I could have written one that used a sliding window system similar to the training data and eliminated this noise.  
 
@@ -80,11 +85,11 @@ First up, the results of the linear network.
 Based on trial and error, I found the linear network converged best when the hidden layer had around 1000 nodes; however, a network of this size is entirely unrealistic. It took almost 5 hours to train this network, and that was on a very powerful machine.
 Regardless, After after setting up the network, I ran it and got the following output after training it a little bit.  
 
-Predicted Output of Linear Network @ 20 epochs: [![Play linear generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/linear_epoch=20_beethoven_opus10_generated.wav)  
+Predicted Output of Linear Network @ 20 epochs: [![Play linear generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/linear_epoch=20_beethoven_opus10_generated.wav)  
 
 Strangely it's just white noise; maybe we just need to train it more. 
 
-Predicted Output of Linear Network @ 4000 epochs: [![Play linear generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/linear_epoch=4000_beethoven_opus10_generated.wav)
+Predicted Output of Linear Network @ 4000 epochs: [![Play linear generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/linear_epoch=4000_beethoven_opus10_generated.wav)
 
 Well, it at least sounds like audio now. However, it only really sounds like the training data; nothing from the testing data is really retained at all. Let's look at some of the numbers behind it and see if that tells us why it's as bad as it though bad.
 
@@ -104,11 +109,11 @@ Surprisingly, the training and validation MSE's are higher than the testing ones
 
 It's obvious linear regression isn't going to cut it, so let's move on to nonlinear regression. Similar to the linear network, I found that the nonlinear networks also only converged when their hidden layers had 1000 nodes.  
 
-Predicted Output of Nonlinear Network @ 20 epochs: [![Play nonlinear generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/non_lin_epoch=20_beethoven_opus10_generated.wav)  
+Predicted Output of Nonlinear Network @ 20 epochs: [![Play nonlinear generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/non_lin_epoch=20_beethoven_opus10_generated.wav)  
 
 It's somehow worse than the linear one. However, generally nonlinear networks are more difficult to train, so let's try that again but with more epochs. 
 
-Predicted Output of Nonlinear Network @ 4000 epochs: [![Play nonlinear generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/non_lin_epoch=4000_beethoven_opus10_generated.wav)
+Predicted Output of Nonlinear Network @ 4000 epochs: [![Play nonlinear generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/non_lin_epoch=4000_beethoven_opus10_generated.wav)
 
 It still sounds just about the same as the nonlinear output. The numbers tell a very similar story as the audio.
 
@@ -150,25 +155,25 @@ test mse: 8.9273e-05   test rmse: 0.00945       test std: 0.00945
 test mse: 9.0900e-05   test rmse: 0.00953       test std: 0.00950
 ```
 And here are the predicted outputs from the convolutional network:
-* `epoch = 00` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=0_beethoven_opus10_generated.wav)
-* `epoch = 05` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=5_beethoven_opus10_generated.wav)
-* `epoch = 10` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=10_beethoven_opus10_generated.wav)
-* `epoch = 20` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=20_beethoven_opus10_generated.wav)
-* `epoch = 50` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=50_beethoven_opus10_generated.wav)
-* `epoch = 200` :  [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_epoch=200_beethoven_opus10_generated.wav)
+* `epoch = 00` :  [![Play Convolution generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/conv_epoch=0_beethoven_opus10_generated.wav)
+* `epoch = 05` :  [![Play Convolution generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/conv_epoch=5_beethoven_opus10_generated.wav)
+* `epoch = 10` :  [![Play Convolution generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/conv_epoch=10_beethoven_opus10_generated.wav)
+* `epoch = 20` :  [![Play Convolution generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/conv_epoch=20_beethoven_opus10_generated.wav)
+* `epoch = 50` :  [![Play Convolution generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/conv_epoch=50_beethoven_opus10_generated.wav)
+* `epoch = 200` :  [![Play Convolution generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/conv_epoch=200_beethoven_opus10_generated.wav)
 
 First of all, this is the first time we have actually had the audio be properly output of the network, so we're off to a good start. Next, it's clear that the effect is not only being emulated, the network is actually doing a fairly good job at it as the number of epochs increase. The cooler thing is just how good the emulation actually is. Although it's not anything amazing, and it tends to have some crackle, it does a fairly decent job of capturing the effect.  
 
 After getting some good results, I did some experimenting with the network to see if I couldn't back up some of my original conjectures. The following is a sample using the convolutional network above and the rest have slightly modified networks in the ways listed.  
 
-* Unmodified baseline: [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_same_filter_vars_hw50_fs50_beethoven_opus10_generated.wav)  
+* Unmodified baseline: [![Play Convolution generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/conv_same_filter_vars_hw50_fs50_beethoven_opus10_generated.wav)  
 
 
-* No hidden layer : [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_no_mid_hw50_fs50_beethoven_opus10_generated.wav)  
+* No hidden layer : [![Play Convolution generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/conv_no_mid_hw50_fs50_beethoven_opus10_generated.wav)  
 
 Firstly, I tried to see what would happen if I removed the hidden middle layer. Although the network still seems to understand the audio format, as proven by the fact that it's not outputing white noise like the previous examples, it is significantly worse at applying the filter's effect to it. This seems fairly logical, as for this network the filtering effect would have to be trained into the convolutional layer. 
 
-* Different filters for convolution and the convolutional transpose: [![Play Convolution generated output](resources/play.png)](https://rawcdn.githack.com/jshap70/TensorFlow-Signal-Processing/master/sound_files/out/conv_diff_filter_vars_hw50_fs50_beethoven_opus10_generated.wav)  
+* Different filters for convolution and the convolutional transpose: [![Play Convolution generated output](resources/play.png)](https://github.com/jshap70/TensorFlow-Signal-Processing/blob/master/sound_files/out/conv_diff_filter_vars_hw50_fs50_beethoven_opus10_generated.wav)  
 
 As expected, when the network was set up with different filters it seems significantly more resistant to training. This seems logical, given it now has almost double the variables. Furthermore, whenever it makes an adjustment to any of the variables in either filter, it will then have to spend time training the other filter to follow suit. This fighting between variables can dramatically increase the time needed to train the network.  
 
